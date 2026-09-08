@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>BetreuerPlus Mobile</title>
+
+    <!-- iOS Safari PWA Meta Tags -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="BetreuerPlus">
+    <link rel="apple-touch-icon" href="https://cdn-icons-png.flaticon.com/512/3135/3135715.png">
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        body { -webkit-tap-highlight-color: transparent; user-select: none; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
+    </style>
+</head>
+<body class="bg-slate-100 min-h-screen pb-20">
+
+    <!-- Header Navigation -->
+    <header class="bg-slate-900 text-white p-4 sticky top-0 z-50 shadow-md flex justify-between items-center">
+        <div class="flex items-center space-x-2">
+            <i class="fa-solid fa-scale-balanced text-blue-400 text-xl"></i>
+            <span class="font-bold text-lg tracking-wide">BetreuerPlus</span>
+        </div>
+        <button onclick="runBackup()" class="bg-emerald-600 hover:bg-emerald-700 text-white text-xs px-3 py-1.5 rounded-lg flex items-center space-x-1 shadow">
+            <i class="fa-solid fa-shield-halved"></i>
+            <span>AES-256 Backup</span>
+        </button>
+    </header>
+
+    <!-- Main Content for iPhone -->
+    <main class="p-4 space-y-6 max-w-lg mx-auto">
+        
+        <!-- Status Banner -->
+        <div class="bg-blue-900 text-blue-100 p-4 rounded-2xl shadow-sm flex items-center justify-between">
+            <div>
+                <p class="text-xs uppercase font-semibold text-blue-300">Arbeitsbereich</p>
+                <p class="text-lg font-bold">Betreuung Bürogemeinschaft</p>
+            </div>
+            <span class="bg-blue-800 text-blue-200 text-xs px-2.5 py-1 rounded-full font-medium"><i class="fa-solid fa-signal text-emerald-400 mr-1"></i> Live Cloud</span>
+        </div>
+
+        <!-- AI Text Assistant Card for iPhone -->
+        <div class="bg-white rounded-2xl p-5 shadow-sm border border-slate-200 space-y-3">
+            <div class="flex items-center justify-between">
+                <h2 class="font-bold text-slate-800 flex items-center text-base">
+                    <i class="fa-solid fa-wand-magic-sparkles text-amber-500 mr-2"></i> KI-Textumformulierung
+                </h2>
+                <span class="text-xs bg-amber-50 text-amber-700 px-2 py-0.5 rounded font-medium">Behördenstil</span>
+            </div>
+            
+            <textarea id="rawInput" rows="3" class="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Stichpunkte eingeben (z.B. Herr Müller benötigt Verlängerung der Betreuung wegen...)..."></textarea>
+            
+            <button onclick="rephraseText()" class="w-full bg-slate-900 active:bg-slate-800 text-white py-3 rounded-xl font-semibold text-sm shadow flex items-center justify-center space-x-2">
+                <i class="fa-solid fa-sparkles"></i>
+                <span>Text formell umformulieren</span>
+            </button>
+
+            <div id="outputContainer" class="hidden mt-3 p-3 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-700 whitespace-pre-line"></div>
+        </div>
+
+        <!-- Client List Card -->
+        <div class="bg-white rounded-2xl p-5 shadow-sm border border-slate-200 space-y-3">
+            <div class="flex items-center justify-between border-b pb-3">
+                <h2 class="font-bold text-slate-800 flex items-center text-base">
+                    <i class="fa-solid fa-users text-blue-600 mr-2"></i> Meine Klienten
+                </h2>
+                <button onclick="addClientPrompt()" class="text-xs bg-blue-50 text-blue-600 px-2.5 py-1 rounded-lg font-semibold">+ Neu</button>
+            </div>
+
+            <div id="clientList" class="space-y-2">
+                <div class="p-3 bg-slate-50 rounded-xl flex justify-between items-center">
+                    <div>
+                        <p class="font-bold text-slate-800 text-sm">Hans Müller</p>
+                        <p class="text-xs text-slate-500">Az: 31 K 102/26 • AG Köln</p>
+                    </div>
+                    <i class="fa-solid fa-chevron-right text-slate-400 text-xs"></i>
+                </div>
+                <div class="p-3 bg-slate-50 rounded-xl flex justify-between items-center">
+                    <div>
+                        <p class="font-bold text-slate-800 text-sm">Anna Schmidt</p>
+                        <p class="text-xs text-slate-500">Az: 14 K 88/25 • AG Bonn</p>
+                    </div>
+                    <i class="fa-solid fa-chevron-right text-slate-400 text-xs"></i>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- Bottom Navigation Bar (iOS App Look & Feel) -->
+    <nav class="fixed bottom-0 left-0 right-0 bg-white border-t border-slate-200 py-2.5 px-6 flex justify-around items-center z-50">
+        <button class="flex flex-col items-center text-blue-600">
+            <i class="fa-solid fa-house text-lg"></i>
+            <span class="text-[10px] font-medium mt-1">Home</span>
+        </button>
+        <button class="flex flex-col items-center text-slate-400">
+            <i class="fa-solid fa-users text-lg"></i>
+            <span class="text-[10px] font-medium mt-1">Klienten</span>
+        </button>
+        <button class="flex flex-col items-center text-slate-400">
+            <i class="fa-solid fa-calendar-check text-lg"></i>
+            <span class="text-[10px] font-medium mt-1">Fristen</span>
+        </button>
+        <button class="flex flex-col items-center text-slate-400">
+            <i class="fa-solid fa-gear text-lg"></i>
+            <span class="text-[10px] font-medium mt-1">Einstellungen</span>
+        </button>
+    </nav>
+
+    <script>
+        async function rephraseText() {
+            const input = document.getElementById('rawInput').value;
+            const container = document.getElementById('outputContainer');
+            if(!input) return alert('Bitte zuerst Stichpunkte eingeben.');
+            
+            container.classList.remove('hidden');
+            container.innerText = "Umformulierung wird generiert...";
+            
+            try {
+                const res = await fetch('/api/ai/rephrase', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'json'},
+                    body: JSON.stringify({text: input, style: 'gericht'})
+                });
+                const data = await res.json();
+                container.innerText = data.rephrased;
+            } catch(e) {
+                container.innerText = "Fehler beim Aufrufen der KI: " + e.message;
+            }
+        }
+
+        async function runBackup() {
+            try {
+                const res = await fetch('/api/backup/export', {method: 'POST'});
+                const data = await res.json();
+                alert('Sicherung erfolgreich! Status: ' + data.message);
+            } catch(e) {
+                alert('Backup-Fehler: ' + e.message);
+            }
+        }
+
+        function addClientPrompt() {
+            alert('Funktion Klient anlegen auf gerufen.');
+        }
+    </script>
+
+</body>
+</html>
