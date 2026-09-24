@@ -1,25 +1,23 @@
 # GBB Lernen
 
-Lern-App zum Sachkundenachweis (BtRegV) – am **iPhone** und **Android-Tablet** über HTTPS öffnen.
+Dauerhafte private Lern-App (Passwortschutz) für iPhone und Android.
 
-## Am Handy öffnen (privat mit Login)
+## Sofort öffnen (dauerhaft)
 
-Die App ist **passwortgeschützt**. Beim Öffnen fragt der Browser nach Benutzer und Passwort.
+**https://cdn.jsdelivr.net/gh/rams8107-crypto/betreuer-app@gbb-lernen/docs/index.html**
 
-Standard (änderbar per Umgebungsvariable):
+Login:
 
 | | |
 |---|---|
 | Benutzer | `ramazan` |
 | Passwort | `GBBprivat26` |
 
-Auf Render setzen: `GBB_USER` und `GBB_PASSWORD`.
+Zum Homescreen: iPhone Safari → Teilen → Zum Home-Bildschirm / Android Chrome → App installieren.
 
-1. URL öffnen → Login eingeben
-2. **iPhone (Safari):** Teilen → **Zum Home-Bildschirm**
-3. **Android (Chrome):** Menü ⋮ → **App installieren** / **Zum Startbildschirm**
+## Render (optional, eigener Server)
 
-Hinweis Free-Plan: Nach Pause kann der erste Aufruf **30–60 Sekunden** dauern.
+Siehe unten – Blueprint in `render.yaml`.
 
 ## Render einrichten (einmalig)
 
