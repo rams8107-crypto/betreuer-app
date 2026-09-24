@@ -2,9 +2,20 @@
 
 Lern-App zum Sachkundenachweis (BtRegV) – am **iPhone** und **Android-Tablet** über HTTPS öffnen.
 
-## Am Handy öffnen (nach Render-Deploy)
+## Am Handy öffnen (privat mit Login)
 
-1. Im Browser die Render-URL öffnen, z. B. `https://gbb-lernen.onrender.com`
+Die App ist **passwortgeschützt**. Beim Öffnen fragt der Browser nach Benutzer und Passwort.
+
+Standard (änderbar per Umgebungsvariable):
+
+| | |
+|---|---|
+| Benutzer | `ramazan` |
+| Passwort | `GBBprivat26` |
+
+Auf Render setzen: `GBB_USER` und `GBB_PASSWORD`.
+
+1. URL öffnen → Login eingeben
 2. **iPhone (Safari):** Teilen → **Zum Home-Bildschirm**
 3. **Android (Chrome):** Menü ⋮ → **App installieren** / **Zum Startbildschirm**
 
