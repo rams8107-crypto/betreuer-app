@@ -137,15 +137,15 @@
     return `
       <section class="screen">
         <div class="hero">
-          <p class="brand">GBB Lernen</p>
-          <h1>Sachkunde für gesetzliche Berufsbetreuung</h1>
-          <p>Elf Module nach BtRegV – Lernkarten und Quiz für unterwegs.</p>
+          <h1 class="brand">GBB Lernen</h1>
+          <p class="hero-line">Sachkunde für gesetzliche Berufsbetreuung</p>
+          <p class="hero-sub">Elf Module nach BtRegV – Lernkarten und Quiz für unterwegs.</p>
           <div class="cta-row">
             <button class="btn btn-primary" data-action="open-module" data-id="${nextId}">Weiterlernen</button>
             <button class="btn btn-ghost" data-action="go" data-route="modules">Alle Module</button>
           </div>
         </div>
-        <div class="panel">
+        <div class="panel after-hero">
           <div class="stat-line">
             <div class="stat"><strong>${prog.percent}%</strong><span>Module bestanden</span></div>
             <div class="stat"><strong>${state.meta?.total_hours || 270}</strong><span>Zeitstunden (Lehrgang)</span></div>
@@ -217,7 +217,16 @@
 
   function renderModuleDetail() {
     const m = state.module;
-    if (!m) return `<section class="screen panel"><p>Modul wird geladen…</p></section>`;
+    if (!m) {
+      return `
+        <section class="screen">
+          <div class="topbar">
+            <button class="back" data-action="go" data-route="modules" aria-label="Zurück">←</button>
+            <h2>Modul</h2>
+          </div>
+          <div class="panel"><p class="lede">Modul wird geladen…</p></div>
+        </section>`;
+    }
     const p = moduleProgress(m.id);
     const topics = m.topics.map((t) => `<div class="topic">${escapeHtml(t)}</div>`).join("");
     const cards = m.cards
@@ -356,14 +365,19 @@
   }
 
   async function openModule(id) {
+    const keep =
+      state.module && state.module.id === id ? state.module : null;
     state.route = "module";
-    state.module = null;
+    state.module = keep;
+    state.loadingModule = !keep;
     render();
     try {
       state.module = await api(`/api/modules/${id}`);
+      state.loadingModule = false;
       markCardsDone(id);
       render();
     } catch (err) {
+      state.loadingModule = false;
       state.error = err.message;
       state.route = "modules";
       render();
@@ -372,7 +386,8 @@
 
   async function startQuiz(id) {
     try {
-      state.quiz = await api(`/api/modules/${id}/quiz`);
+      const quiz = await api(`/api/modules/${id}/quiz`);
+      state.quiz = quiz;
       state.quizIndex = 0;
       state.selections = {};
       state.review = null;
