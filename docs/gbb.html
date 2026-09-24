@@ -1,0 +1,1063 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>GBB Lernen</title>
+  <meta name="theme-color" content="#0B1F1A" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-title" content="GBB Lernen" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,700;1,9..40,400&family=Fraunces:opsz,wght@9..144,500;9..144,700&display=swap" rel="stylesheet" />
+  <style>
+:root {
+  --ink: #0b1f1a;
+  --ink-2: #14352c;
+  --mist: #dce8e1;
+  --paper: #f3f7f4;
+  --gold: #c4a35a;
+  --gold-deep: #9a7a35;
+  --ok: #2f6f55;
+  --bad: #a33b32;
+  --muted: #5c7268;
+  --line: rgba(11, 31, 26, 0.12);
+  --shadow: 0 18px 40px rgba(11, 31, 26, 0.18);
+  --radius: 18px;
+  --font-display: "Fraunces", Georgia, serif;
+  --font-body: "DM Sans", sans-serif;
+  --safe-bottom: env(safe-area-inset-bottom, 0px);
+}
+
+* { box-sizing: border-box; }
+html, body { height: 100%; }
+body {
+  margin: 0;
+  font-family: var(--font-body);
+  color: var(--ink);
+  background: var(--paper);
+  -webkit-tap-highlight-color: transparent;
+  overscroll-behavior-y: none;
+}
+
+.atmosphere {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  background:
+    radial-gradient(1200px 600px at 10% -10%, rgba(196, 163, 90, 0.28), transparent 55%),
+    radial-gradient(900px 500px at 100% 0%, rgba(20, 53, 44, 0.35), transparent 50%),
+    linear-gradient(165deg, #eef5f0 0%, #d7e5dc 42%, #c9d9d0 100%);
+  animation: drift 18s ease-in-out infinite alternate;
+}
+
+@keyframes drift {
+  from { filter: hue-rotate(0deg) saturate(1); transform: scale(1); }
+  to { filter: hue-rotate(8deg) saturate(1.05); transform: scale(1.03); }
+}
+
+#app {
+  min-height: 100%;
+  padding: 0 0 calc(88px + var(--safe-bottom));
+}
+
+.screen {
+  animation: rise 420ms cubic-bezier(.2,.8,.2,1) both;
+}
+
+@keyframes rise {
+  from { opacity: 0; transform: translateY(14px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.hero {
+  min-height: 100dvh;
+  padding: 48px 24px calc(96px + var(--safe-bottom));
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  color: #f3f7f4;
+  background:
+    linear-gradient(180deg, rgba(11,31,26,0.25) 0%, rgba(11,31,26,0.92) 62%, #0b1f1a 100%),
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160' viewBox='0 0 160 160'%3E%3Cg fill='none' stroke='%23c4a35a' stroke-opacity='0.12'%3E%3Cpath d='M0 80h160M80 0v160'/%3E%3C/g%3E%3C/svg%3E"),
+    linear-gradient(135deg, #14352c, #0b1f1a 60%, #1a4034);
+  position: relative;
+  overflow: hidden;
+}
+
+.hero::after {
+  content: "";
+  position: absolute;
+  inset: auto -20% -30% 20%;
+  height: 55%;
+  background: radial-gradient(circle at 30% 30%, rgba(196,163,90,0.35), transparent 60%);
+  animation: glow 5.5s ease-in-out infinite alternate;
+  pointer-events: none;
+}
+
+@keyframes glow {
+  from { opacity: 0.55; transform: translateX(0); }
+  to { opacity: 1; transform: translateX(-18px); }
+}
+
+.brand {
+  font-family: var(--font-display);
+  font-size: clamp(3.2rem, 14vw, 4.6rem);
+  font-weight: 700;
+  letter-spacing: -0.045em;
+  line-height: 0.9;
+  margin: 0 0 18px;
+  position: relative;
+  z-index: 1;
+  color: #f7faf7;
+}
+
+.hero-line {
+  font-family: var(--font-display);
+  font-size: clamp(1.05rem, 3.8vw, 1.28rem);
+  font-weight: 500;
+  line-height: 1.3;
+  margin: 0 0 10px;
+  max-width: 24ch;
+  position: relative;
+  z-index: 1;
+  color: rgba(243, 247, 244, 0.88);
+}
+
+.hero-sub {
+  margin: 0 0 24px;
+  color: rgba(243, 247, 244, 0.78);
+  font-size: 0.98rem;
+  line-height: 1.45;
+  max-width: 32ch;
+  position: relative;
+  z-index: 1;
+}
+
+.after-hero {
+  padding-top: 28px;
+}
+
+.cta-row {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  position: relative;
+  z-index: 1;
+}
+
+.btn {
+  appearance: none;
+  border: 0;
+  border-radius: 999px;
+  padding: 14px 20px;
+  font: 700 0.95rem/1 var(--font-body);
+  cursor: pointer;
+  transition: transform 160ms ease, background 160ms ease, color 160ms ease;
+}
+.btn:active { transform: scale(0.98); }
+.btn-primary {
+  background: var(--gold);
+  color: var(--ink);
+}
+.btn-primary:hover { background: #d4b56a; }
+.btn-ghost {
+  background: rgba(243,247,244,0.1);
+  color: #f3f7f4;
+  border: 1px solid rgba(243,247,244,0.28);
+}
+.btn-ink {
+  background: var(--ink);
+  color: #f3f7f4;
+  width: 100%;
+}
+.btn-soft {
+  background: rgba(11,31,26,0.06);
+  color: var(--ink);
+}
+
+.panel {
+  padding: 22px 20px 8px;
+  max-width: 640px;
+  margin: 0 auto;
+}
+
+.section-title {
+  font-family: var(--font-display);
+  font-size: 1.45rem;
+  margin: 8px 0 6px;
+}
+.lede {
+  color: var(--muted);
+  margin: 0 0 18px;
+  line-height: 1.45;
+  font-size: 0.95rem;
+}
+
+.stat-line {
+  display: flex;
+  gap: 10px;
+  margin: 0 0 18px;
+  flex-wrap: wrap;
+}
+.stat {
+  flex: 1;
+  min-width: 96px;
+  padding: 12px 14px;
+  border-radius: 14px;
+  background: rgba(255,255,255,0.55);
+  border: 1px solid var(--line);
+}
+.stat strong {
+  display: block;
+  font-family: var(--font-display);
+  font-size: 1.35rem;
+}
+.stat span {
+  color: var(--muted);
+  font-size: 0.78rem;
+}
+
+.module-list {
+  display: grid;
+  gap: 10px;
+}
+
+.module-row {
+  width: 100%;
+  text-align: left;
+  border: 1px solid var(--line);
+  background: rgba(255,255,255,0.62);
+  border-radius: var(--radius);
+  padding: 14px 14px 14px 16px;
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  gap: 12px;
+  align-items: center;
+  cursor: pointer;
+  font: inherit;
+  color: inherit;
+  transition: transform 180ms ease, border-color 180ms ease, background 180ms ease;
+}
+.module-row:hover {
+  border-color: rgba(196,163,90,0.55);
+  background: rgba(255,255,255,0.86);
+}
+.module-row:active { transform: scale(0.995); }
+
+.mod-num {
+  width: 42px;
+  height: 42px;
+  border-radius: 12px;
+  display: grid;
+  place-items: center;
+  background: var(--ink);
+  color: var(--gold);
+  font-family: var(--font-display);
+  font-weight: 700;
+}
+.mod-body h3 {
+  margin: 0 0 4px;
+  font-size: 0.98rem;
+  line-height: 1.25;
+}
+.mod-body p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.8rem;
+}
+.mod-meta {
+  color: var(--muted);
+  font-size: 0.75rem;
+  text-align: right;
+}
+.badge {
+  display: inline-block;
+  margin-top: 6px;
+  padding: 3px 8px;
+  border-radius: 999px;
+  background: rgba(47,111,85,0.12);
+  color: var(--ok);
+  font-size: 0.7rem;
+  font-weight: 700;
+}
+.badge.warn {
+  background: rgba(196,163,90,0.2);
+  color: var(--gold-deep);
+}
+
+.topbar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 16px 16px 0;
+  max-width: 640px;
+  margin: 0 auto;
+}
+.back {
+  border: 0;
+  background: rgba(11,31,26,0.08);
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
+  font-size: 1.1rem;
+  cursor: pointer;
+}
+.topbar h2 {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: 1.15rem;
+  line-height: 1.2;
+}
+
+.topic-list, .card-stack {
+  display: grid;
+  gap: 10px;
+  margin: 14px 0 20px;
+}
+.topic, .learn-card {
+  background: rgba(255,255,255,0.7);
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  padding: 14px 16px;
+}
+.topic {
+  font-size: 0.92rem;
+  line-height: 1.4;
+}
+.learn-card strong {
+  display: block;
+  font-family: var(--font-display);
+  margin-bottom: 8px;
+  font-size: 1.02rem;
+}
+.learn-card p {
+  margin: 0;
+  color: var(--muted);
+  line-height: 1.45;
+  font-size: 0.92rem;
+}
+
+.quiz-progress {
+  height: 6px;
+  background: rgba(11,31,26,0.1);
+  border-radius: 999px;
+  overflow: hidden;
+  margin: 8px 0 18px;
+}
+.quiz-progress > i {
+  display: block;
+  height: 100%;
+  width: 0;
+  background: linear-gradient(90deg, var(--ink-2), var(--gold));
+  transition: width 280ms ease;
+}
+
+.q-text {
+  font-family: var(--font-display);
+  font-size: 1.25rem;
+  line-height: 1.3;
+  margin: 0 0 16px;
+}
+
+.options {
+  display: grid;
+  gap: 10px;
+}
+.option {
+  text-align: left;
+  border: 1px solid var(--line);
+  background: rgba(255,255,255,0.75);
+  border-radius: 14px;
+  padding: 14px 14px;
+  font: 500 0.95rem/1.35 var(--font-body);
+  cursor: pointer;
+  transition: border-color 150ms ease, background 150ms ease, transform 150ms ease;
+}
+.option.is-selected {
+  border-color: var(--gold-deep);
+  background: rgba(196,163,90,0.18);
+}
+.option.is-correct {
+  border-color: var(--ok);
+  background: rgba(47,111,85,0.14);
+}
+.option.is-wrong {
+  border-color: var(--bad);
+  background: rgba(163,59,50,0.12);
+}
+.option:disabled { cursor: default; }
+
+.explain {
+  margin-top: 14px;
+  padding: 12px 14px;
+  border-radius: 14px;
+  background: rgba(11,31,26,0.06);
+  color: var(--muted);
+  font-size: 0.9rem;
+  line-height: 1.4;
+  animation: rise 280ms ease both;
+}
+
+.result-hero {
+  text-align: center;
+  padding: 28px 16px 10px;
+}
+.result-hero .score {
+  font-family: var(--font-display);
+  font-size: 3rem;
+  margin: 8px 0;
+}
+.result-hero .pass { color: var(--ok); }
+.result-hero .fail { color: var(--bad); }
+
+.progress-bar {
+  height: 10px;
+  border-radius: 999px;
+  background: rgba(11,31,26,0.1);
+  overflow: hidden;
+  margin: 8px 0 4px;
+}
+.progress-bar > span {
+  display: block;
+  height: 100%;
+  background: linear-gradient(90deg, var(--ink-2), var(--gold));
+  transition: width 500ms cubic-bezier(.2,.8,.2,1);
+}
+
+.disclaimer {
+  margin: 18px 0 8px;
+  font-size: 0.78rem;
+  color: var(--muted);
+  line-height: 1.4;
+}
+.disclaimer a {
+  color: var(--ink-2);
+  font-weight: 700;
+}
+
+.tabbar {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 4px;
+  padding: 8px 10px calc(8px + var(--safe-bottom));
+  background: rgba(243,247,244,0.88);
+  backdrop-filter: blur(14px);
+  border-top: 1px solid var(--line);
+  z-index: 40;
+}
+.tab {
+  border: 0;
+  background: transparent;
+  color: var(--muted);
+  display: grid;
+  gap: 2px;
+  justify-items: center;
+  padding: 8px 4px;
+  font: 600 0.7rem/1 var(--font-body);
+  cursor: pointer;
+}
+.tab-ico { font-size: 1.05rem; line-height: 1; }
+.tab.is-active { color: var(--ink); }
+
+.hidden { display: none !important; }
+
+@media (min-width: 720px) {
+  .hero { padding-left: max(24px, calc(50% - 320px)); padding-right: max(24px, calc(50% - 320px)); }
+}
+
+</style>
+  <style>
+    .gate {
+      min-height: 100dvh;
+      display: grid;
+      place-items: center;
+      padding: 24px;
+    }
+    .gate-box {
+      width: min(100%, 360px);
+      background: rgba(255,255,255,0.72);
+      border: 1px solid rgba(11,31,26,0.12);
+      border-radius: 18px;
+      padding: 28px 22px;
+      backdrop-filter: blur(10px);
+    }
+    .gate-box h1 {
+      font-family: "Fraunces", Georgia, serif;
+      font-size: 2rem;
+      margin: 0 0 8px;
+    }
+    .gate-box p {
+      color: #5c7268;
+      margin: 0 0 18px;
+      font-size: 0.95rem;
+      line-height: 1.4;
+    }
+    .gate-box label {
+      display: block;
+      font-size: 0.8rem;
+      font-weight: 700;
+      margin: 0 0 6px;
+    }
+    .gate-box input {
+      width: 100%;
+      border: 1px solid rgba(11,31,26,0.16);
+      border-radius: 12px;
+      padding: 12px 14px;
+      font: 500 1rem/1.2 "DM Sans", sans-serif;
+      margin-bottom: 12px;
+      background: #fff;
+    }
+    .gate-error {
+      color: #a33b32;
+      font-size: 0.85rem;
+      min-height: 1.2em;
+      margin: 0 0 8px;
+    }
+  </style>
+</head>
+<body>
+  <div class="atmosphere" aria-hidden="true"></div>
+  <div id="gate" class="gate">
+    <form class="gate-box" id="loginForm">
+      <h1>GBB Lernen</h1>
+      <p>Privater Zugang – bitte anmelden.</p>
+      <label for="user">Benutzer</label>
+      <input id="user" name="user" autocomplete="username" required />
+      <label for="pass">Passwort</label>
+      <input id="pass" name="pass" type="password" autocomplete="current-password" required />
+      <p class="gate-error" id="gateError"></p>
+      <button class="btn btn-ink" type="submit">Öffnen</button>
+    </form>
+  </div>
+  <div id="appShell" class="hidden">
+    <div id="app"></div>
+    <nav class="tabbar" id="tabbar" aria-label="Hauptnavigation">
+      <button type="button" data-route="home" class="tab is-active">
+        <span class="tab-ico" aria-hidden="true">⌂</span>
+        <span>Start</span>
+      </button>
+      <button type="button" data-route="modules" class="tab">
+        <span class="tab-ico" aria-hidden="true">☰</span>
+        <span>Module</span>
+      </button>
+      <button type="button" data-route="progress" class="tab">
+        <span class="tab-ico" aria-hidden="true">◎</span>
+        <span>Fortschritt</span>
+      </button>
+    </nav>
+  </div>
+  <script>
+(() => {
+  const STORAGE_KEY = "gbb-lernen-progress-v1";
+  const AUTH_KEY = "gbb-lernen-auth-v1";
+  const EXPECTED_USER = "ramazan";
+  const EXPECTED_PASS = "GBBprivat26";
+
+  const gate = document.getElementById("gate");
+  const appShell = document.getElementById("appShell");
+  const app = document.getElementById("app");
+  const tabbar = document.getElementById("tabbar");
+  const loginForm = document.getElementById("loginForm");
+  const gateError = document.getElementById("gateError");
+
+  const state = {
+    route: "home",
+    modules: [],
+    meta: null,
+    module: null,
+    quiz: null,
+    quizIndex: 0,
+    selections: {},
+    review: null,
+    loading: true,
+    error: null,
+  };
+
+  function isAuthed() {
+    try {
+      return sessionStorage.getItem(AUTH_KEY) === "ok";
+    } catch {
+      return false;
+    }
+  }
+
+  function setAuthed() {
+    sessionStorage.setItem(AUTH_KEY, "ok");
+  }
+
+  function loadProgress() {
+    try {
+      return JSON.parse(localStorage.getItem(STORAGE_KEY) || "{}");
+    } catch {
+      return {};
+    }
+  }
+
+  function saveProgress(data) {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+  }
+
+  function moduleProgress(id) {
+    const p = loadProgress()[String(id)] || {};
+    return {
+      cardsDone: !!p.cardsDone,
+      bestPercent: p.bestPercent || 0,
+      passed: !!p.passed,
+      attempts: p.attempts || 0,
+    };
+  }
+
+  function markCardsDone(id) {
+    const all = loadProgress();
+    const cur = all[String(id)] || {};
+    cur.cardsDone = true;
+    all[String(id)] = cur;
+    saveProgress(all);
+  }
+
+  function markQuizResult(id, percent, passed) {
+    const all = loadProgress();
+    const cur = all[String(id)] || {};
+    cur.attempts = (cur.attempts || 0) + 1;
+    cur.bestPercent = Math.max(cur.bestPercent || 0, percent);
+    cur.passed = cur.passed || passed;
+    all[String(id)] = cur;
+    saveProgress(all);
+  }
+
+  function overallProgress() {
+    if (!state.modules.length) return { done: 0, total: 0, percent: 0 };
+    const total = state.modules.length;
+    const done = state.modules.filter((m) => moduleProgress(m.id).passed).length;
+    return { done, total, percent: Math.round((done / total) * 100) };
+  }
+
+  function continueModuleId() {
+    const unfinished = state.modules.find((m) => !moduleProgress(m.id).passed);
+    return unfinished ? unfinished.id : state.modules[0]?.id || 1;
+  }
+
+  function getFullModule(id) {
+    return state.fullModules.find((m) => m.id === id) || null;
+  }
+
+  function listSummary() {
+    return state.fullModules.map((m) => ({
+      id: m.id,
+      title: m.title,
+      hours: m.hours,
+      area: m.area,
+      summary: m.summary,
+      topic_count: m.topics.length,
+      card_count: m.cards.length,
+      quiz_count: m.quiz.length,
+    }));
+  }
+
+  async function boot() {
+    try {
+      const data = {"meta": {"module_count": 11, "total_hours": 270, "total_questions": 59, "total_official_topics": 59, "source": {"title": "Anlage zu § 3 Abs. 4 BtRegV – Inhaltliche Anforderungen an die Sachkunde (Module)", "citation": "BGBl. I 2022, 1159–1161", "pdf_url": "https://www.gesetze-im-internet.de/btregv/BtRegV.pdf", "html_url": "https://www.gesetze-im-internet.de/btregv/anlage.html", "preamble": "Die Inhalte der Module werden grundsätzlich in Lehrveranstaltungen vermittelt, die in Präsenz oder online durchgeführt werden und praktische Übungen umfassen. Prüfungszeiten sind in den vorgeschriebenen Zeitstunden enthalten. Antragsteller mit Hochschulabschluss können bis zu 50 % der Zeitstunden des jeweiligen Moduls (außer Module 10 und 11) in Selbstlernphasen absolvieren; übrige Antragsteller bis zu 15 %."}, "disclaimer": "Lernhilfe auf Basis der amtlichen Anlage zu § 3 Abs. 4 BtRegV (BGBl. I 2022, 1159–1161). Kein anerkannter Sachkundelehrgang nach BtRegV § 6. Lehrgangsskripte von Bildungsträgern (z. B. GALB) sind urheberrechtlich geschützt und hier nicht enthalten."}, "modules": [{"id": 1, "title": "Betreuerbestellung und Zusammenarbeit mit dem Betreuungsgericht", "hours": 15, "area": "Rechtliche Grundlagen (§ 3 Abs. 1 Nr. 1)", "legal_ref": "Zu Absatz 1 Nummer 1", "summary": "Voraussetzungen und Verfahren der Betreuerbestellung, Einwilligungsvorbehalt, Aufgabenbereiche, Aufsicht und Genehmigungen.", "topics": ["Betreuerbestellung: Voraussetzungen, Verfahren, Sachverhaltsermittlung", "Anordnung eines Einwilligungsvorbehalts: Voraussetzungen, Grenzen, Verfahren", "Aufgabenbereiche", "Aufsicht durch das Betreuungsgericht", "Berichts-, Auskunfts- und Mitteilungspflichten", "Genehmigungsvorbehalte einschließlich Verfahren"], "lessons": [{"title": "Betreuerbestellung: Voraussetzungen, Verfahren, Sachverhaltsermittlung", "body": "Eine Betreuung darf nur angeordnet werden, wenn ein volljähriger Mensch aufgrund von Krankheit oder Behinderung seine Angelegenheiten ganz oder teilweise nicht besorgen kann und keine milderen Mittel (z. B. Vorsorgevollmacht, andere Hilfen) ausreichen. Das Gericht ermittelt den Sachverhalt, holt i. d. R. ein Gutachten ein und hört die betroffene Person persönlich. Der Aufgabenkreis ist am Erforderlichkeitsgrundsatz auszurichten."}, {"title": "Anordnung eines Einwilligungsvorbehalts: Voraussetzungen, Grenzen, Verfahren", "body": "Der Einwilligungsvorbehalt schützt vor nachteiligen Rechtsgeschäften, wenn die Gefahr erheblicher Vermögensgefährdung besteht. Er ist an Voraussetzungen und Grenzen gebunden und bedarf eines gerichtlichen Verfahrens. Ohne erforderliche Einwilligung des Betreuers sind erfasste Willenserklärungen regelmäßig schwebend unwirksam."}, {"title": "Aufgabenbereiche", "body": "Der Aufgabenkreis (z. B. Vermögenssorge, Gesundheitssorge, Aufenthaltsbestimmung) wird vom Gericht festgelegt und darf nur so weit reichen, wie nötig. Außerhalb des Aufgabenkreises besteht keine Vertretungsmacht."}, {"title": "Aufsicht durch das Betreuungsgericht", "body": "Das Betreuungsgericht überwacht die Tätigkeit des Betreuers. Es kann Auskünfte verlangen, Berichte anfordern und bei Pflichtverletzungen eingreifen, bis hin zur Entlassung."}, {"title": "Berichts-, Auskunfts- und Mitteilungspflichten", "body": "Berufliche Betreuer müssen dem Gericht berichten, Auskunft geben und wesentliche Veränderungen mitteilen. Dokumentation und fristgerechte Berichte sind zentrale Pflichten."}, {"title": "Genehmigungsvorbehalte einschließlich Verfahren", "body": "Viele eingreifende Maßnahmen (z. B. riskante Vermögensgeschäfte, Wohnungsaufgabe, freiheitsentziehende Maßnahmen) bedürfen der gerichtlichen Genehmigung. Das Verfahren und die Auswirkungen fehlender Genehmigung sind zu kennen."}], "cards": [{"q": "Betreuerbestellung: Voraussetzungen, Verfahren, Sachverhaltsermittlung", "a": "Eine Betreuung darf nur angeordnet werden, wenn ein volljähriger Mensch aufgrund von Krankheit oder Behinderung seine Angelegenheiten ganz oder teilweise nicht besorgen kann und keine milderen Mittel (z. B. Vorsorgevollmacht, andere Hilfen) ausreichen. Das Gericht ermittelt den Sachverhalt, holt i. d. R. ein Gutachten ein und hört die betroffene Person persönlich. Der Aufgabenkreis ist am Erforderlichkeitsgrundsatz auszurichten."}, {"q": "Anordnung eines Einwilligungsvorbehalts: Voraussetzungen, Grenzen, Verfahren", "a": "Der Einwilligungsvorbehalt schützt vor nachteiligen Rechtsgeschäften, wenn die Gefahr erheblicher Vermögensgefährdung besteht. Er ist an Voraussetzungen und Grenzen gebunden und bedarf eines gerichtlichen Verfahrens. Ohne erforderliche Einwilligung des Betreuers sind erfasste Willenserklärungen regelmäßig schwebend unwirksam."}, {"q": "Aufgabenbereiche", "a": "Der Aufgabenkreis (z. B. Vermögenssorge, Gesundheitssorge, Aufenthaltsbestimmung) wird vom Gericht festgelegt und darf nur so weit reichen, wie nötig. Außerhalb des Aufgabenkreises besteht keine Vertretungsmacht."}, {"q": "Aufsicht durch das Betreuungsgericht", "a": "Das Betreuungsgericht überwacht die Tätigkeit des Betreuers. Es kann Auskünfte verlangen, Berichte anfordern und bei Pflichtverletzungen eingreifen, bis hin zur Entlassung."}, {"q": "Berichts-, Auskunfts- und Mitteilungspflichten", "a": "Berufliche Betreuer müssen dem Gericht berichten, Auskunft geben und wesentliche Veränderungen mitteilen. Dokumentation und fristgerechte Berichte sind zentrale Pflichten."}, {"q": "Genehmigungsvorbehalte einschließlich Verfahren", "a": "Viele eingreifende Maßnahmen (z. B. riskante Vermögensgeschäfte, Wohnungsaufgabe, freiheitsentziehende Maßnahmen) bedürfen der gerichtlichen Genehmigung. Das Verfahren und die Auswirkungen fehlender Genehmigung sind zu kennen."}], "quiz": [{"id": "1-1", "question": "Worum geht es im Unterrichtsinhalt „Betreuerbestellung“ (Modul 1)?", "options": ["Eine Betreuung darf nur angeordnet werden, wenn ein volljähriger Mensch aufgrund von Krankheit oder …", "Nur um steuerrechtliche Pflichten ohne Bezug zur Betreuung", "Ausschließlich um strafrechtliche Sanktionen gegen Betreuer", "Um die Auflösung aller Sozialversicherungen"], "correct": 0, "explain": "Laut BtRegV-Anlage: Betreuerbestellung: Voraussetzungen, Verfahren, Sachverhaltsermittlung"}, {"id": "1-2", "question": "Worum geht es im Unterrichtsinhalt „Anordnung eines Einwilligungsvorbehalts“ (Modul 1)?", "options": ["Der Einwilligungsvorbehalt schützt vor nachteiligen Rechtsgeschäften, wenn die Gefahr erheblicher …", "Nur um steuerrechtliche Pflichten ohne Bezug zur Betreuung", "Ausschließlich um strafrechtliche Sanktionen gegen Betreuer", "Um die Auflösung aller Sozialversicherungen"], "correct": 0, "explain": "Laut BtRegV-Anlage: Anordnung eines Einwilligungsvorbehalts: Voraussetzungen, Grenzen, Verfahren"}, {"id": "1-3", "question": "Worum geht es im Unterrichtsinhalt „Aufgabenbereiche“ (Modul 1)?", "options": ["Der Aufgabenkreis (z. B. Vermögenssorge, Gesundheitssorge, Aufenthaltsbestimmung) wird vom Gericht festgelegt …", "Nur um steuerrechtliche Pflichten ohne Bezug zur Betreuung", "Ausschließlich um strafrechtliche Sanktionen gegen Betreuer", "Um die Auflösung aller Sozialversicherungen"], "correct": 0, "explain": "Laut BtRegV-Anlage: Aufgabenbereiche"}, {"id": "1-4", "question": "Worum geht es im Unterrichtsinhalt „Aufsicht durch das Betreuungsgericht“ (Modul 1)?", "options": ["Das Betreuungsgericht überwacht die Tätigkeit des Betreuers. Es kann Auskünfte verlangen, Berichte anfordern …", "Nur um steuerrechtliche Pflichten ohne Bezug zur Betreuung", "Ausschließlich um strafrechtliche Sanktionen gegen Betreuer", "Um die Auflösung aller Sozialversicherungen"], "correct": 0, "explain": "Laut BtRegV-Anlage: Aufsicht durch das Betreuungsgericht"}, {"id": "1-5", "question": "Worum geht es im Unterrichtsinhalt „Berichts-“ (Modul 1)?", "options": ["Berufliche Betreuer müssen dem Gericht berichten, Auskunft geben und wesentliche Veränderungen mitteilen. …", "Nur um steuerrechtliche Pflichten ohne Bezug zur Betreuung", "Ausschließlich um strafrechtliche Sanktionen gegen Betreuer", "Um die Auflösung aller Sozialversicherungen"], "correct": 0, "explain": "Laut BtRegV-Anlage: Berichts-, Auskunfts- und Mitteilungspflichten"}, {"id": "1-6", "question": "Worum geht es im Unterrichtsinhalt „Genehmigungsvorbehalte einschließlich Verfahren“ (Modul 1)?", "options": ["Viele eingreifende Maßnahmen (z. B. riskante Vermögensgeschäfte, Wohnungsaufgabe, freiheitsentziehende …", "Nur um steuerrechtliche Pflichten ohne Bezug zur Betreuung", "Ausschließlich um strafrechtliche Sanktionen gegen Betreuer", "Um die Auflösung aller Sozialversicherungen"], "correct": 0, "explain": "Laut BtRegV-Anlage: Genehmigungsvorbehalte einschließlich Verfahren"}]}, {"id": 2, "title": "Betreuungsführung", "hours": 30, "area": "Rechtliche Grundlagen (§ 3 Abs. 1 Nr. 1)", "legal_ref": "Zu Absatz 1 Nummer 1", "summary": "UN-BRK Art. 12, Willensvorrang, Betreuungsziele, Erforderlichkeit im Innenverhältnis und Schutzpflichten.", "topics": ["UN-Behindertenrechtskonvention, insbesondere Artikel 12: Unterstützung bei der Ausübung der Rechts- und Handlungsfähigkeit, Bedeutung der Grundrechte", "Ermittlung der Wohn- und Lebenslage des Betreuten", "Erarbeitung der Betreuungsziele", "Vorrang der Unterstützung und Willensvorrang nach § 1821 BGB", "Wille, Wünsche, Präferenzen", "Erforderlichkeitsgrundsatz im Innenverhältnis", "Schutzpflichten"], "lessons": [{"title": "UN-Behindertenrechtskonvention, insbesondere Artikel 12: Unterstützung bei der Ausübung der Rechts- und Handlungsfähigkeit, Bedeutung der Grundrechte", "body": "Art. 12 UN-BRK betont gleiche Rechts- und Handlungsfähigkeit und fordert Unterstützung statt Entmündigung. Betreuung ist als Unterstützung bei der Ausübung von Rechten zu verstehen; Grundrechte bleiben Leitlinie."}, {"title": "Ermittlung der Wohn- und Lebenslage des Betreuten", "body": "Zu Beginn und fortlaufend sind Wohnsituation, soziale Netze, Alltag, Risiken und Ressourcen zu erheben – Grundlage für Ziele und Maßnahmen."}, {"title": "Erarbeitung der Betreuungsziele", "body": "Gemeinsam mit der betreuten Person werden Ziele formuliert (Teilhabe, Gesundheit, Wohnen, Finanzen). Ziele sind zu dokumentieren und regelmäßig zu überprüfen."}, {"title": "Vorrang der Unterstützung und Willensvorrang nach § 1821 BGB", "body": "Der Betreuer unterstützt die Person möglichst bei eigenen Entscheidungen. Maßgeblich sind Wunsch und Wille; nur hilfsweise der mutmaßliche Wille."}, {"title": "Wille, Wünsche, Präferenzen", "body": "Aktuelle Äußerungen, Biografie, Werthaltungen und wiederkehrende Präferenzen sind zu ermitteln und zu gewichten – auch bei eingeschränkter Kommunikationsfähigkeit."}, {"title": "Erforderlichkeitsgrundsatz im Innenverhältnis", "body": "Auch innerhalb des Aufgabenkreises darf nur gehandelt werden, soweit nötig. Selbstbestimmung und milde Mittel haben Vorrang vor Ersatzentscheidungen."}, {"title": "Schutzpflichten", "body": "Neben der Willensorientierung bestehen Schutzpflichten vor erheblichen Gefahren für Leben, Gesundheit und Vermögen – abzuwägen ohne Bevormundung als Regelfall."}], "cards": [{"q": "UN-Behindertenrechtskonvention, insbesondere Artikel 12: Unterstützung bei der Ausübung der Rechts- und Handlungsfähigkeit, Bedeutung der Grundrechte", "a": "Art. 12 UN-BRK betont gleiche Rechts- und Handlungsfähigkeit und fordert Unterstützung statt Entmündigung. Betreuung ist als Unterstützung bei der Ausübung von Rechten zu verstehen; Grundrechte bleiben Leitlinie."}, {"q": "Ermittlung der Wohn- und Lebenslage des Betreuten", "a": "Zu Beginn und fortlaufend sind Wohnsituation, soziale Netze, Alltag, Risiken und Ressourcen zu erheben – Grundlage für Ziele und Maßnahmen."}, {"q": "Erarbeitung der Betreuungsziele", "a": "Gemeinsam mit der betreuten Person werden Ziele formuliert (Teilhabe, Gesundheit, Wohnen, Finanzen). Ziele sind zu dokumentieren und regelmäßig zu überprüfen."}, {"q": "Vorrang der Unterstützung und Willensvorrang nach § 1821 BGB", "a": "Der Betreuer unterstützt die Person möglichst bei eigenen Entscheidungen. Maßgeblich sind Wunsch und Wille; nur hilfsweise der mutmaßliche Wille."}, {"q": "Wille, Wünsche, Präferenzen", "a": "Aktuelle Äußerungen, Biografie, Werthaltungen und wiederkehrende Präferenzen sind zu ermitteln und zu gewichten – auch bei eingeschränkter Kommunikationsfähigkeit."}, {"q": "Erforderlichkeitsgrundsatz im Innenverhältnis", "a": "Auch innerhalb des Aufgabenkreises darf nur gehandelt werden, soweit nötig. Selbstbestimmung und milde Mittel haben Vorrang vor Ersatzentscheidungen."}, {"q": "Schutzpflichten", "a": "Neben der Willensorientierung bestehen Schutzpflichten vor erheblichen Gefahren für Leben, Gesundheit und Vermögen – abzuwägen ohne Bevormundung als Regelfall."}], "quiz": [{"id": "2-1", "question": "Worum geht es im Unterrichtsinhalt „UN-Behindertenrechtskonvention“ (Modul 2)?", "options": ["Art. 12 UN-BRK betont gleiche Rechts- und Handlungsfähigkeit und fordert Unterstützung statt Entmündigung. …", "Nur um steuerrechtliche Pflichten ohne Bezug zur Betreuung", "Ausschließlich um strafrechtliche Sanktionen gegen Betreuer", "Um die Auflösung aller Sozialversicherungen"], "correct": 0, "explain": "Laut BtRegV-Anlage: UN-Behindertenrechtskonvention, insbesondere Artikel 12: Unterstützung bei der Ausübung der Rechts- und Handlungsfähigkeit, Bedeutung der Grundrechte"}, {"id": "2-2", "question": "Worum geht es im Unterrichtsinhalt „Ermittlung der Wohn- und Lebenslage des Betreuten“ (Modul 2)?", "options": ["Zu Beginn und fortlaufend sind Wohnsituation, soziale Netze, Alltag, Risiken und Ressourcen zu erheben – …", "Nur um steuerrechtliche Pflichten ohne Bezug zur Betreuung", "Ausschließlich um strafrechtliche Sanktionen gegen Betreuer", "Um die Auflösung aller Sozialversicherungen"], "correct": 0, "explain": "Laut BtRegV-Anlage: Ermittlung der Wohn- und Lebenslage des Betreuten"}, {"id": "2-3", "question": "Worum geht es im Unterrichtsinhalt „Erarbeitung der Betreuungsziele“ (Modul 2)?", "options": ["Gemeinsam mit der betreuten Person werden Ziele formuliert (Teilhabe, Gesundheit, Wohnen, Finanzen). Ziele …", "Nur um steuerrechtliche Pflichten ohne Bezug zur Betreuung", "Ausschließlich um strafrechtliche Sanktionen gegen Betreuer", "Um die Auflösung aller Sozialversicherungen"], "correct": 0, "explain": "Laut BtRegV-Anlage: Erarbeitung der Betreuungsziele"}, {"id": "2-4", "question": "Worum geht es im Unterrichtsinhalt „Vorrang der Unterstützung und Willensvorrang nach § 1821 BGB“ (Modul 2)?", "options": ["Der Betreuer unterstützt die Person möglichst bei eigenen Entscheidungen. Maßgeblich sind Wunsch und Wille; …", "Nur um steuerrechtliche Pflichten ohne Bezug zur Betreuung", "Ausschließlich um strafrechtliche Sanktionen gegen Betreuer", "Um die Auflösung aller Sozialversicherungen"], "correct": 0, "explain": "Laut BtRegV-Anlage: Vorrang der Unterstützung und Willensvorrang nach § 1821 BGB"}, {"id": "2-5", "question": "Worum geht es im Unterrichtsinhalt „Wille“ (Modul 2)?", "options": ["Aktuelle Äußerungen, Biografie, Werthaltungen und wiederkehrende Präferenzen sind zu ermitteln und zu …", "Nur um steuerrechtliche Pflichten ohne Bezug zur Betreuung", "Ausschließlich um strafrechtliche Sanktionen gegen Betreuer", "Um die Auflösung aller Sozialversicherungen"], "correct": 0, "explain": "Laut BtRegV-Anlage: Wille, Wünsche, Präferenzen"}, {"id": "2-6", "question": "Worum geht es im Unterrichtsinhalt „Erforderlichkeitsgrundsatz im Innenverhältnis“ (Modul 2)?", "options": ["Auch innerhalb des Aufgabenkreises darf nur gehandelt werden, soweit nötig. Selbstbestimmung und milde Mittel …", "Nur um steuerrechtliche Pflichten ohne Bezug zur Betreuung", "Ausschließlich um strafrechtliche Sanktionen gegen Betreuer", "Um die Auflösung aller Sozialversicherungen"], "correct": 0, "explain": "Laut BtRegV-Anlage: Erforderlichkeitsgrundsatz im Innenverhältnis"}, {"id": "2-7", "question": "Worum geht es im Unterrichtsinhalt „Schutzpflichten“ (Modul 2)?", "options": ["Neben der Willensorientierung bestehen Schutzpflichten vor erheblichen Gefahren für Leben, Gesundheit und …", "Nur um steuerrechtliche Pflichten ohne Bezug zur Betreuung", "Ausschließlich um strafrechtliche Sanktionen gegen Betreuer", "Um die Auflösung aller Sozialversicherungen"], "correct": 0, "explain": "Laut BtRegV-Anlage: Schutzpflichten"}]}, {"id": 3, "title": "Recht der Unterbringung und der ärztlichen Zwangsmaßnahmen", "hours": 15, "area": "Rechtliche Grundlagen (§ 3 Abs. 1 Nr. 1)", "legal_ref": "Zu Absatz 1 Nummer 1", "summary": "Freiheitsentzug und Zwangsbehandlung: Voraussetzungen, Verfahren und Aufgaben während des Vollzugs.", "topics": ["Freiheitsentziehende Unterbringung und sonstige freiheitsentziehende Maßnahmen nach Betreuungsrecht und nach öffentlichem Recht: Voraussetzungen und Verfahren", "Einwilligung in ärztliche Zwangsmaßnahmen: Voraussetzungen und Verfahren", "Aufgaben des Betreuers während des Vollzugs einer freiheitsentziehenden Unterbringung, sonstiger freiheitsentziehender Maßnahmen und ärztlicher Zwangsmaßnahmen"], "lessons": [{"title": "Freiheitsentziehende Unterbringung und sonstige freiheitsentziehende Maßnahmen nach Betreuungsrecht und nach öffentlichem Recht: Voraussetzungen und Verfahren", "body": "Unterbringung und FEM (z. B. Fixierung) sind Ultima Ratio bei erheblicher Selbstgefährdung und bedürfen strenger Voraussetzungen sowie i. d. R. richterlicher Genehmigung. Parallel können öffentlich-rechtliche Regelungen (PsychKG der Länder) greifen – Abgrenzung kennen."}, {"title": "Einwilligung in ärztliche Zwangsmaßnahmen: Voraussetzungen und Verfahren", "body": "Ärztliche Zwangsmaßnahmen setzen u. a. Einwilligungsunfähigkeit, drohenden erheblichen Gesundheitsschaden, Ultima Ratio und gerichtliche Genehmigung voraus. Hohe Dokumentations- und Verfahrensanforderungen."}, {"title": "Aufgaben des Betreuers während des Vollzugs einer freiheitsentziehenden Unterbringung, sonstiger freiheitsentziehender Maßnahmen und ärztlicher Zwangsmaßnahmen", "body": "Der Betreuer begleitet den Vollzug, prüft fortdauernde Erforderlichkeit, wahrt Rechte der Person und hält Kontakt zu Klinik/Einrichtung und Gericht."}], "cards": [{"q": "Freiheitsentziehende Unterbringung und sonstige freiheitsentziehende Maßnahmen nach Betreuungsrecht und nach öffentlichem Recht: Voraussetzungen und Verfahren", "a": "Unterbringung und FEM (z. B. Fixierung) sind Ultima Ratio bei erheblicher Selbstgefährdung und bedürfen strenger Voraussetzungen sowie i. d. R. richterlicher Genehmigung. Parallel können öffentlich-rechtliche Regelungen (PsychKG der Länder) greifen – Abgrenzung kennen."}, {"q": "Einwilligung in ärztliche Zwangsmaßnahmen: Voraussetzungen und Verfahren", "a": "Ärztliche Zwangsmaßnahmen setzen u. a. Einwilligungsunfähigkeit, drohenden erheblichen Gesundheitsschaden, Ultima Ratio und gerichtliche Genehmigung voraus. Hohe Dokumentations- und Verfahrensanforderungen."}, {"q": "Aufgaben des Betreuers während des Vollzugs einer freiheitsentziehenden Unterbringung, sonstiger freiheitsentziehender Maßnahmen und ärztlicher Zwangsmaßnahmen", "a": "Der Betreuer begleitet den Vollzug, prüft fortdauernde Erforderlichkeit, wahrt Rechte der Person und hält Kontakt zu Klinik/Einrichtung und Gericht."}], "quiz": [{"id": "3-1", "question": "Worum geht es im Unterrichtsinhalt „Freiheitsentziehende Unterbringung und sonstige freiheitsentziehende Maßnahmen nach Betreuungsrecht und nach öffentlichem Recht“ (Modul 3)?", "options": ["Unterbringung und FEM (z. B. Fixierung) sind Ultima Ratio bei erheblicher Selbstgefährdung und bedürfen …", "Nur um steuerrechtliche Pflichten ohne Bezug zur Betreuung", "Ausschließlich um strafrechtliche Sanktionen gegen Betreuer", "Um die Auflösung aller Sozialversicherungen"], "correct": 0, "explain": "Laut BtRegV-Anlage: Freiheitsentziehende Unterbringung und sonstige freiheitsentziehende Maßnahmen nach Betreuungsrecht und nach öffentlichem Recht: Voraussetzungen und Verfahren"}, {"id": "3-2", "question": "Worum geht es im Unterrichtsinhalt „Einwilligung in ärztliche Zwangsmaßnahmen“ (Modul 3)?", "options": ["Ärztliche Zwangsmaßnahmen setzen u. a. Einwilligungsunfähigkeit, drohenden erheblichen Gesundheitsschaden, …", "Nur um steuerrechtliche Pflichten ohne Bezug zur Betreuung", "Ausschließlich um strafrechtliche Sanktionen gegen Betreuer", "Um die Auflösung aller Sozialversicherungen"], "correct": 0, "explain": "Laut BtRegV-Anlage: Einwilligung in ärztliche Zwangsmaßnahmen: Voraussetzungen und Verfahren"}, {"id": "3-3", "question": "Worum geht es im Unterrichtsinhalt „Aufgaben des Betreuers während des Vollzugs einer freiheitsentziehenden Unterbringung“ (Modul 3)?", "options": ["Der Betreuer begleitet den Vollzug, prüft fortdauernde Erforderlichkeit, wahrt Rechte der Person und hält …", "Nur um steuerrechtliche Pflichten ohne Bezug zur Betreuung", "Ausschließlich um strafrechtliche Sanktionen gegen Betreuer", "Um die Auflösung aller Sozialversicherungen"], "correct": 0, "explain": "Laut BtRegV-Anlage: Aufgaben des Betreuers während des Vollzugs einer freiheitsentziehenden Unterbringung, sonstiger freiheitsentziehender Maßnahmen und ärztlicher Zwangsmaßnahmen"}]}, {"id": 4, "title": "Personensorge 1", "hours": 15, "area": "Personensorge (§ 3 Abs. 1 Nr. 2)", "legal_ref": "Zu Absatz 1 Nummer 2", "summary": "Krankheits- und Behinderungsbilder sowie Vermeidung von Freiheitsentzug und Zwang.", "topics": ["Grundkenntnisse über typische betreuungsrelevante Erkrankungen und Behinderungen, deren Auswirkungen, Gefahren und Behandlungsmöglichkeiten", "Möglichkeiten der Vermeidung einer freiheitsentziehenden Unterbringung, sonstiger freiheitsentziehender Maßnahmen und ärztlicher Zwangsmaßnahmen"], "lessons": [{"title": "Grundkenntnisse über typische betreuungsrelevante Erkrankungen und Behinderungen, deren Auswirkungen, Gefahren und Behandlungsmöglichkeiten", "body": "Orientierungswissen zu Demenz, Psychosen, Depression, Sucht, Intelligenzminderung u. a.: Auswirkungen auf Alltag und Entscheidungsfähigkeit, typische Risiken und Behandlungsansätze – ohne ärztliche Diagnostik zu ersetzen."}, {"title": "Möglichkeiten der Vermeidung einer freiheitsentziehenden Unterbringung, sonstiger freiheitsentziehender Maßnahmen und ärztlicher Zwangsmaßnahmen", "body": "Krisenplanung, ambulante Hilfen, Netzwerk, Wohnanpassung, Vertrauensaufbau und frühzeitige Unterstützung verringern Zwangsrisiken. Mildere Mittel haben Vorrang."}], "cards": [{"q": "Grundkenntnisse über typische betreuungsrelevante Erkrankungen und Behinderungen, deren Auswirkungen, Gefahren und Behandlungsmöglichkeiten", "a": "Orientierungswissen zu Demenz, Psychosen, Depression, Sucht, Intelligenzminderung u. a.: Auswirkungen auf Alltag und Entscheidungsfähigkeit, typische Risiken und Behandlungsansätze – ohne ärztliche Diagnostik zu ersetzen."}, {"q": "Möglichkeiten der Vermeidung einer freiheitsentziehenden Unterbringung, sonstiger freiheitsentziehender Maßnahmen und ärztlicher Zwangsmaßnahmen", "a": "Krisenplanung, ambulante Hilfen, Netzwerk, Wohnanpassung, Vertrauensaufbau und frühzeitige Unterstützung verringern Zwangsrisiken. Mildere Mittel haben Vorrang."}], "quiz": [{"id": "4-1", "question": "Worum geht es im Unterrichtsinhalt „Grundkenntnisse über typische betreuungsrelevante Erkrankungen und Behinderungen“ (Modul 4)?", "options": ["Orientierungswissen zu Demenz, Psychosen, Depression, Sucht, Intelligenzminderung u. a.: Auswirkungen auf …", "Nur um steuerrechtliche Pflichten ohne Bezug zur Betreuung", "Ausschließlich um strafrechtliche Sanktionen gegen Betreuer", "Um die Auflösung aller Sozialversicherungen"], "correct": 0, "explain": "Laut BtRegV-Anlage: Grundkenntnisse über typische betreuungsrelevante Erkrankungen und Behinderungen, deren Auswirkungen, Gefahren und Behandlungsmöglichkeiten"}, {"id": "4-2", "question": "Worum geht es im Unterrichtsinhalt „Möglichkeiten der Vermeidung einer freiheitsentziehenden Unterbringung“ (Modul 4)?", "options": ["Krisenplanung, ambulante Hilfen, Netzwerk, Wohnanpassung, Vertrauensaufbau und frühzeitige Unterstützung …", "Nur um steuerrechtliche Pflichten ohne Bezug zur Betreuung", "Ausschließlich um strafrechtliche Sanktionen gegen Betreuer", "Um die Auflösung aller Sozialversicherungen"], "correct": 0, "explain": "Laut BtRegV-Anlage: Möglichkeiten der Vermeidung einer freiheitsentziehenden Unterbringung, sonstiger freiheitsentziehender Maßnahmen und ärztlicher Zwangsmaßnahmen"}]}, {"id": 5, "title": "Personensorge 2", "hours": 15, "area": "Personensorge (§ 3 Abs. 1 Nr. 2)", "legal_ref": "Zu Absatz 1 Nummer 2", "summary": "Behandlung, Patientenrechte, gefährliche Maßnahmen, Wohnraum, Umgang und Aufenthalt.", "topics": ["Behandlungsvertragsrecht, Einwilligungsfähigkeit und Patientenrechte", "Behandlungswünsche, Patientenverfügung, Sterbewunsch", "Einwilligung des Betreuers bei gefährlichen ärztlichen Maßnahmen: Voraussetzungen und Verfahren", "Aufgabe von Wohnraum", "Umgangs- und Aufenthaltsbestimmung"], "lessons": [{"title": "Behandlungsvertragsrecht, Einwilligungsfähigkeit und Patientenrechte", "body": "Behandlung basiert auf Aufklärung und Einwilligung. Einwilligungsfähigkeit ist situationsbezogen. Patientenrechte umfassen Information, Einsicht und Selbstbestimmung."}, {"title": "Behandlungswünsche, Patientenverfügung, Sterbewunsch", "body": "Schriftliche Patientenverfügungen und Behandlungswünsche sind zu ermitteln und – soweit einschlägig – umzusetzen. Aktueller Wille und Auslegung der Verfügung sind sorgfältig zu prüfen."}, {"title": "Einwilligung des Betreuers bei gefährlichen ärztlichen Maßnahmen: Voraussetzungen und Verfahren", "body": "Bei besonders riskanten Eingriffen gelten erhöhte Anforderungen; oft ist gerichtliche Genehmigung nötig. Nutzen, Risiken und Wille der Person sind abzuwägen."}, {"title": "Aufgabe von Wohnraum", "body": "Die Aufgabe der Wohnung ist besonders eingreifend und häufig genehmigungspflichtig. Alternativen, soziale Bezüge und der Wille der Person stehen im Zentrum."}, {"title": "Umgangs- und Aufenthaltsbestimmung", "body": "Soweit dem Aufgabenkreis zugeordnet: Entscheidungen zu Aufenthalt und Umgang unter Beachtung von Wille, Wohl und rechtlichen Grenzen (inkl. familiärer Bezüge)."}], "cards": [{"q": "Behandlungsvertragsrecht, Einwilligungsfähigkeit und Patientenrechte", "a": "Behandlung basiert auf Aufklärung und Einwilligung. Einwilligungsfähigkeit ist situationsbezogen. Patientenrechte umfassen Information, Einsicht und Selbstbestimmung."}, {"q": "Behandlungswünsche, Patientenverfügung, Sterbewunsch", "a": "Schriftliche Patientenverfügungen und Behandlungswünsche sind zu ermitteln und – soweit einschlägig – umzusetzen. Aktueller Wille und Auslegung der Verfügung sind sorgfältig zu prüfen."}, {"q": "Einwilligung des Betreuers bei gefährlichen ärztlichen Maßnahmen: Voraussetzungen und Verfahren", "a": "Bei besonders riskanten Eingriffen gelten erhöhte Anforderungen; oft ist gerichtliche Genehmigung nötig. Nutzen, Risiken und Wille der Person sind abzuwägen."}, {"q": "Aufgabe von Wohnraum", "a": "Die Aufgabe der Wohnung ist besonders eingreifend und häufig genehmigungspflichtig. Alternativen, soziale Bezüge und der Wille der Person stehen im Zentrum."}, {"q": "Umgangs- und Aufenthaltsbestimmung", "a": "Soweit dem Aufgabenkreis zugeordnet: Entscheidungen zu Aufenthalt und Umgang unter Beachtung von Wille, Wohl und rechtlichen Grenzen (inkl. familiärer Bezüge)."}], "quiz": [{"id": "5-1", "question": "Worum geht es im Unterrichtsinhalt „Behandlungsvertragsrecht“ (Modul 5)?", "options": ["Behandlung basiert auf Aufklärung und Einwilligung. Einwilligungsfähigkeit ist situationsbezogen. …", "Nur um steuerrechtliche Pflichten ohne Bezug zur Betreuung", "Ausschließlich um strafrechtliche Sanktionen gegen Betreuer", "Um die Auflösung aller Sozialversicherungen"], "correct": 0, "explain": "Laut BtRegV-Anlage: Behandlungsvertragsrecht, Einwilligungsfähigkeit und Patientenrechte"}, {"id": "5-2", "question": "Worum geht es im Unterrichtsinhalt „Behandlungswünsche“ (Modul 5)?", "options": ["Schriftliche Patientenverfügungen und Behandlungswünsche sind zu ermitteln und – soweit einschlägig – …", "Nur um steuerrechtliche Pflichten ohne Bezug zur Betreuung", "Ausschließlich um strafrechtliche Sanktionen gegen Betreuer", "Um die Auflösung aller Sozialversicherungen"], "correct": 0, "explain": "Laut BtRegV-Anlage: Behandlungswünsche, Patientenverfügung, Sterbewunsch"}, {"id": "5-3", "question": "Worum geht es im Unterrichtsinhalt „Einwilligung des Betreuers bei gefährlichen ärztlichen Maßnahmen“ (Modul 5)?", "options": ["Bei besonders riskanten Eingriffen gelten erhöhte Anforderungen; oft ist gerichtliche Genehmigung nötig. …", "Nur um steuerrechtliche Pflichten ohne Bezug zur Betreuung", "Ausschließlich um strafrechtliche Sanktionen gegen Betreuer", "Um die Auflösung aller Sozialversicherungen"], "correct": 0, "explain": "Laut BtRegV-Anlage: Einwilligung des Betreuers bei gefährlichen ärztlichen Maßnahmen: Voraussetzungen und Verfahren"}, {"id": "5-4", "question": "Worum geht es im Unterrichtsinhalt „Aufgabe von Wohnraum“ (Modul 5)?", "options": ["Die Aufgabe der Wohnung ist besonders eingreifend und häufig genehmigungspflichtig. Alternativen, soziale …", "Nur um steuerrechtliche Pflichten ohne Bezug zur Betreuung", "Ausschließlich um strafrechtliche Sanktionen gegen Betreuer", "Um die Auflösung aller Sozialversicherungen"], "correct": 0, "explain": "Laut BtRegV-Anlage: Aufgabe von Wohnraum"}, {"id": "5-5", "question": "Worum geht es im Unterrichtsinhalt „Umgangs- und Aufenthaltsbestimmung“ (Modul 5)?", "options": ["Soweit dem Aufgabenkreis zugeordnet: Entscheidungen zu Aufenthalt und Umgang unter Beachtung von Wille, Wohl …", "Nur um steuerrechtliche Pflichten ohne Bezug zur Betreuung", "Ausschließlich um strafrechtliche Sanktionen gegen Betreuer", "Um die Auflösung aller Sozialversicherungen"], "correct": 0, "explain": "Laut BtRegV-Anlage: Umgangs- und Aufenthaltsbestimmung"}]}, {"id": 6, "title": "Vermögenssorge 1", "hours": 15, "area": "Vermögenssorge (§ 3 Abs. 1 Nr. 3)", "legal_ref": "Zu Absatz 1 Nummer 3", "summary": "Geschäftsfähigkeit, Stellvertretung, Schuldrecht, Kaufvertrag, Schulden und Insolvenzgrundlagen.", "topics": ["Geschäftsfähigkeit", "Recht der Stellvertretung", "allgemeines Schuldrecht einschließlich Haftungsfragen", "Kaufvertragsrecht", "Schuldenregulierung, Mahn- und Vollstreckungsbescheid, Zwangsvollstreckung, Insolvenzverfahren"], "lessons": [{"title": "Geschäftsfähigkeit", "body": "Unterscheidung Geschäftsunfähigkeit / beschränkte Geschäftsfähigkeit / volle Geschäftsfähigkeit und Folgen für Willenserklärungen – praxisrelevant für Verträge der betreuten Person."}, {"title": "Recht der Stellvertretung", "body": "Der Betreuer handelt im Außenverhältnis als gesetzlicher Vertreter im Aufgabenkreis. Innenverhältnis und Grenzen der Vertretungsmacht beachten."}, {"title": "allgemeines Schuldrecht einschließlich Haftungsfragen", "body": "Grundzüge von Forderung, Erfüllung, Verzug und Haftung – auch eigene Sorgfaltspflichten des Betreuers."}, {"title": "Kaufvertragsrecht", "body": "Zustandekommen, Pflichten, Gewährleistung und typische Fallstricke beim Kauf für oder durch betreute Personen."}, {"title": "Schuldenregulierung, Mahn- und Vollstreckungsbescheid, Zwangsvollstreckung, Insolvenzverfahren", "body": "Überblick schaffen, Fristen wahren, Widerspruch/Einspruch prüfen, Pfändungsschutz kennen und geeignete Schuldenregulierungs- bzw. Insolvenzwege einordnen."}], "cards": [{"q": "Geschäftsfähigkeit", "a": "Unterscheidung Geschäftsunfähigkeit / beschränkte Geschäftsfähigkeit / volle Geschäftsfähigkeit und Folgen für Willenserklärungen – praxisrelevant für Verträge der betreuten Person."}, {"q": "Recht der Stellvertretung", "a": "Der Betreuer handelt im Außenverhältnis als gesetzlicher Vertreter im Aufgabenkreis. Innenverhältnis und Grenzen der Vertretungsmacht beachten."}, {"q": "allgemeines Schuldrecht einschließlich Haftungsfragen", "a": "Grundzüge von Forderung, Erfüllung, Verzug und Haftung – auch eigene Sorgfaltspflichten des Betreuers."}, {"q": "Kaufvertragsrecht", "a": "Zustandekommen, Pflichten, Gewährleistung und typische Fallstricke beim Kauf für oder durch betreute Personen."}, {"q": "Schuldenregulierung, Mahn- und Vollstreckungsbescheid, Zwangsvollstreckung, Insolvenzverfahren", "a": "Überblick schaffen, Fristen wahren, Widerspruch/Einspruch prüfen, Pfändungsschutz kennen und geeignete Schuldenregulierungs- bzw. Insolvenzwege einordnen."}], "quiz": [{"id": "6-1", "question": "Worum geht es im Unterrichtsinhalt „Geschäftsfähigkeit“ (Modul 6)?", "options": ["Unterscheidung Geschäftsunfähigkeit / beschränkte Geschäftsfähigkeit / volle Geschäftsfähigkeit und Folgen …", "Nur um steuerrechtliche Pflichten ohne Bezug zur Betreuung", "Ausschließlich um strafrechtliche Sanktionen gegen Betreuer", "Um die Auflösung aller Sozialversicherungen"], "correct": 0, "explain": "Laut BtRegV-Anlage: Geschäftsfähigkeit"}, {"id": "6-2", "question": "Worum geht es im Unterrichtsinhalt „Recht der Stellvertretung“ (Modul 6)?", "options": ["Der Betreuer handelt im Außenverhältnis als gesetzlicher Vertreter im Aufgabenkreis. Innenverhältnis und …", "Nur um steuerrechtliche Pflichten ohne Bezug zur Betreuung", "Ausschließlich um strafrechtliche Sanktionen gegen Betreuer", "Um die Auflösung aller Sozialversicherungen"], "correct": 0, "explain": "Laut BtRegV-Anlage: Recht der Stellvertretung"}, {"id": "6-3", "question": "Worum geht es im Unterrichtsinhalt „allgemeines Schuldrecht einschließlich Haftungsfragen“ (Modul 6)?", "options": ["Grundzüge von Forderung, Erfüllung, Verzug und Haftung – auch eigene Sorgfaltspflichten des …", "Nur um steuerrechtliche Pflichten ohne Bezug zur Betreuung", "Ausschließlich um strafrechtliche Sanktionen gegen Betreuer", "Um die Auflösung aller Sozialversicherungen"], "correct": 0, "explain": "Laut BtRegV-Anlage: allgemeines Schuldrecht einschließlich Haftungsfragen"}, {"id": "6-4", "question": "Worum geht es im Unterrichtsinhalt „Kaufvertragsrecht“ (Modul 6)?", "options": ["Zustandekommen, Pflichten, Gewährleistung und typische Fallstricke beim Kauf für oder durch betreute …", "Nur um steuerrechtliche Pflichten ohne Bezug zur Betreuung", "Ausschließlich um strafrechtliche Sanktionen gegen Betreuer", "Um die Auflösung aller Sozialversicherungen"], "correct": 0, "explain": "Laut BtRegV-Anlage: Kaufvertragsrecht"}, {"id": "6-5", "question": "Worum geht es im Unterrichtsinhalt „Schuldenregulierung“ (Modul 6)?", "options": ["Überblick schaffen, Fristen wahren, Widerspruch/Einspruch prüfen, Pfändungsschutz kennen und geeignete …", "Nur um steuerrechtliche Pflichten ohne Bezug zur Betreuung", "Ausschließlich um strafrechtliche Sanktionen gegen Betreuer", "Um die Auflösung aller Sozialversicherungen"], "correct": 0, "explain": "Laut BtRegV-Anlage: Schuldenregulierung, Mahn- und Vollstreckungsbescheid, Zwangsvollstreckung, Insolvenzverfahren"}]}, {"id": 7, "title": "Vermögenssorge 2", "hours": 15, "area": "Vermögenssorge (§ 3 Abs. 1 Nr. 3)", "legal_ref": "Zu Absatz 1 Nummer 3", "summary": "Vermögensverwaltung, Verzeichnis, Rechnungslegung, Miet-/Heimrecht sowie Erb- und Familienrecht.", "topics": ["Vermögensverwaltung und Verfügungen über das Betreutenvermögen", "Vermögensverzeichnis, Rechnungslegung und Genehmigungsvorbehalte", "Betreuungsrelevante Aspekte des Miet- und Heimrechts", "Betreuungsrelevante Aspekte des Erb- und Familienrechts"], "lessons": [{"title": "Vermögensverwaltung und Verfügungen über das Betreutenvermögen", "body": "Sicher, wirtschaftlich und am Willen orientiert verwalten. Verfügungen über Vermögen können genehmigungspflichtig sein."}, {"title": "Vermögensverzeichnis, Rechnungslegung und Genehmigungsvorbehalte", "body": "Zu Beginn: Vermögensverzeichnis. Laufend: nachvollziehbare Rechnungslegung. Genehmigungsvorbehalte bei riskanten Geschäften einhalten."}, {"title": "Betreuungsrelevante Aspekte des Miet- und Heimrechts", "body": "Wohnraummiete und Heimverträge: Kündigungsschutz, Leistungen, Kosten, Sozialleistungsbezug und Wille der Person."}, {"title": "Betreuungsrelevante Aspekte des Erb- und Familienrechts", "body": "Annahme/Ausschlagung von Erbschaften, Fristen, Unterhaltsbezüge und familiäre Rechtsverhältnisse können betreuungsrelevant und genehmigungspflichtig sein."}], "cards": [{"q": "Vermögensverwaltung und Verfügungen über das Betreutenvermögen", "a": "Sicher, wirtschaftlich und am Willen orientiert verwalten. Verfügungen über Vermögen können genehmigungspflichtig sein."}, {"q": "Vermögensverzeichnis, Rechnungslegung und Genehmigungsvorbehalte", "a": "Zu Beginn: Vermögensverzeichnis. Laufend: nachvollziehbare Rechnungslegung. Genehmigungsvorbehalte bei riskanten Geschäften einhalten."}, {"q": "Betreuungsrelevante Aspekte des Miet- und Heimrechts", "a": "Wohnraummiete und Heimverträge: Kündigungsschutz, Leistungen, Kosten, Sozialleistungsbezug und Wille der Person."}, {"q": "Betreuungsrelevante Aspekte des Erb- und Familienrechts", "a": "Annahme/Ausschlagung von Erbschaften, Fristen, Unterhaltsbezüge und familiäre Rechtsverhältnisse können betreuungsrelevant und genehmigungspflichtig sein."}], "quiz": [{"id": "7-1", "question": "Worum geht es im Unterrichtsinhalt „Vermögensverwaltung und Verfügungen über das Betreutenvermögen“ (Modul 7)?", "options": ["Sicher, wirtschaftlich und am Willen orientiert verwalten. Verfügungen über Vermögen können …", "Nur um steuerrechtliche Pflichten ohne Bezug zur Betreuung", "Ausschließlich um strafrechtliche Sanktionen gegen Betreuer", "Um die Auflösung aller Sozialversicherungen"], "correct": 0, "explain": "Laut BtRegV-Anlage: Vermögensverwaltung und Verfügungen über das Betreutenvermögen"}, {"id": "7-2", "question": "Worum geht es im Unterrichtsinhalt „Vermögensverzeichnis“ (Modul 7)?", "options": ["Zu Beginn: Vermögensverzeichnis. Laufend: nachvollziehbare Rechnungslegung. Genehmigungsvorbehalte bei …", "Nur um steuerrechtliche Pflichten ohne Bezug zur Betreuung", "Ausschließlich um strafrechtliche Sanktionen gegen Betreuer", "Um die Auflösung aller Sozialversicherungen"], "correct": 0, "explain": "Laut BtRegV-Anlage: Vermögensverzeichnis, Rechnungslegung und Genehmigungsvorbehalte"}, {"id": "7-3", "question": "Worum geht es im Unterrichtsinhalt „Betreuungsrelevante Aspekte des Miet- und Heimrechts“ (Modul 7)?", "options": ["Wohnraummiete und Heimverträge: Kündigungsschutz, Leistungen, Kosten, Sozialleistungsbezug und Wille der …", "Nur um steuerrechtliche Pflichten ohne Bezug zur Betreuung", "Ausschließlich um strafrechtliche Sanktionen gegen Betreuer", "Um die Auflösung aller Sozialversicherungen"], "correct": 0, "explain": "Laut BtRegV-Anlage: Betreuungsrelevante Aspekte des Miet- und Heimrechts"}, {"id": "7-4", "question": "Worum geht es im Unterrichtsinhalt „Betreuungsrelevante Aspekte des Erb- und Familienrechts“ (Modul 7)?", "options": ["Annahme/Ausschlagung von Erbschaften, Fristen, Unterhaltsbezüge und familiäre Rechtsverhältnisse können …", "Nur um steuerrechtliche Pflichten ohne Bezug zur Betreuung", "Ausschließlich um strafrechtliche Sanktionen gegen Betreuer", "Um die Auflösung aller Sozialversicherungen"], "correct": 0, "explain": "Laut BtRegV-Anlage: Betreuungsrelevante Aspekte des Erb- und Familienrechts"}]}, {"id": 8, "title": "Sozialrecht 1: Kenntnisse des Sozialrechts", "hours": 30, "area": "Sozialrecht (§ 3 Abs. 2 Nr. 1)", "legal_ref": "Zu Absatz 2 Nummer 1", "summary": "SGB/SGG im Überblick, Existenzsicherung, Kranken-/Renten-/Pflegeversicherung und Anspruchsdurchsetzung.", "topics": ["Das Sozialrecht (SGB und SGG) im Überblick, insbesondere Leistungen zur Sicherung des Lebensunterhalts einschließlich der Kosten der Unterkunft, vor allem nach dem SGB II und XII", "Sozialleistungsansprüche nach dem SGB V, VI und XI", "Ermittlung, Geltendmachung und Durchsetzung von sozialrechtlichen Ansprüchen sowie sozialrechtliche Mitwirkungspflichten"], "lessons": [{"title": "Das Sozialrecht (SGB und SGG) im Überblick, insbesondere Leistungen zur Sicherung des Lebensunterhalts einschließlich der Kosten der Unterkunft, vor allem nach dem SGB II und XII", "body": "Systematik des SGB. SGB II (Bürgergeld) und SGB XII (u. a. Hilfe zum Lebensunterhalt / Grundsicherung) inkl. KdU: Anspruchsvoraussetzungen, Zuständigkeit, typische Bescheide."}, {"title": "Sozialleistungsansprüche nach dem SGB V, VI und XI", "body": "Krankenversicherung (SGB V), Rentenversicherung (SGB VI) und Pflegeversicherung (SGB XI): zentrale Leistungsarten und Schnittstellen zur Betreuung."}, {"title": "Ermittlung, Geltendmachung und Durchsetzung von sozialrechtlichen Ansprüchen sowie sozialrechtliche Mitwirkungspflichten", "body": "Bedarf erkennen, Anträge stellen, Fristen und Mitwirkung beachten. Bei Ablehnung: Widerspruch und ggf. Klage (SGG)."}], "cards": [{"q": "Das Sozialrecht (SGB und SGG) im Überblick, insbesondere Leistungen zur Sicherung des Lebensunterhalts einschließlich der Kosten der Unterkunft, vor allem nach dem SGB II und XII", "a": "Systematik des SGB. SGB II (Bürgergeld) und SGB XII (u. a. Hilfe zum Lebensunterhalt / Grundsicherung) inkl. KdU: Anspruchsvoraussetzungen, Zuständigkeit, typische Bescheide."}, {"q": "Sozialleistungsansprüche nach dem SGB V, VI und XI", "a": "Krankenversicherung (SGB V), Rentenversicherung (SGB VI) und Pflegeversicherung (SGB XI): zentrale Leistungsarten und Schnittstellen zur Betreuung."}, {"q": "Ermittlung, Geltendmachung und Durchsetzung von sozialrechtlichen Ansprüchen sowie sozialrechtliche Mitwirkungspflichten", "a": "Bedarf erkennen, Anträge stellen, Fristen und Mitwirkung beachten. Bei Ablehnung: Widerspruch und ggf. Klage (SGG)."}], "quiz": [{"id": "8-1", "question": "Worum geht es im Unterrichtsinhalt „Das Sozialrecht (SGB und SGG) im Überblick“ (Modul 8)?", "options": ["Systematik des SGB. SGB II (Bürgergeld) und SGB XII (u. a. Hilfe zum Lebensunterhalt / Grundsicherung) inkl. …", "Nur um steuerrechtliche Pflichten ohne Bezug zur Betreuung", "Ausschließlich um strafrechtliche Sanktionen gegen Betreuer", "Um die Auflösung aller Sozialversicherungen"], "correct": 0, "explain": "Laut BtRegV-Anlage: Das Sozialrecht (SGB und SGG) im Überblick, insbesondere Leistungen zur Sicherung des Lebensunterhalts einschließlich der Kosten der Unterkunft, vor allem nach dem SGB II und XII"}, {"id": "8-2", "question": "Worum geht es im Unterrichtsinhalt „Sozialleistungsansprüche nach dem SGB V“ (Modul 8)?", "options": ["Krankenversicherung (SGB V), Rentenversicherung (SGB VI) und Pflegeversicherung (SGB XI): zentrale …", "Nur um steuerrechtliche Pflichten ohne Bezug zur Betreuung", "Ausschließlich um strafrechtliche Sanktionen gegen Betreuer", "Um die Auflösung aller Sozialversicherungen"], "correct": 0, "explain": "Laut BtRegV-Anlage: Sozialleistungsansprüche nach dem SGB V, VI und XI"}, {"id": "8-3", "question": "Worum geht es im Unterrichtsinhalt „Ermittlung“ (Modul 8)?", "options": ["Bedarf erkennen, Anträge stellen, Fristen und Mitwirkung beachten. Bei Ablehnung: Widerspruch und ggf. Klage …", "Nur um steuerrechtliche Pflichten ohne Bezug zur Betreuung", "Ausschließlich um strafrechtliche Sanktionen gegen Betreuer", "Um die Auflösung aller Sozialversicherungen"], "correct": 0, "explain": "Laut BtRegV-Anlage: Ermittlung, Geltendmachung und Durchsetzung von sozialrechtlichen Ansprüchen sowie sozialrechtliche Mitwirkungspflichten"}]}, {"id": 9, "title": "Sozialrecht 2: Sozial- und Hilfestrukturen in der Praxis", "hours": 45, "area": "Sozialrecht (§ 3 Abs. 2 Nr. 2)", "legal_ref": "Zu Absatz 2 Nummer 2", "summary": "Teilhabe, Eingliederungshilfe, Wohnformen, Pflegekombinationen und Netzwerkarbeit.", "topics": ["Teilhabeleistungen vor allem nach SGB IX", "Teilhabe- und Gesamtplanverfahren", "Rehabilitations- und Teilhabeleistungen der verschiedenen Rehabilitationsträger", "Leistungsformen der Eingliederungshilfe (z. B. Teilhabe am Arbeitsleben, medizinische Rehabilitation, Teilhabe an Bildung und Leistungen zur sozialen Teilhabe)", "Besondere Wohnformen und ambulant betreute Wohngemeinschaften", "Pflegeleistungen in Kombination mit anderen SGB-Leistungen", "Leistungen der Pflegeversicherung einschließlich Aufklärung, Auskunft und Pflegeberatung nach den §§ 7 ff. SGB XI sowie das Verhältnis zu anderen Sozialleistungen nach § 13 SGB XI", "Leistungen der Hilfe zur Pflege nach SGB XII", "Leistungen der gesetzlichen Krankenversicherung im Pflegefall (z. B. häusliche Krankenpflege und weitere Leistungen nach den §§ 37 ff. SGB V, medizinische Rehabilitation)", "Leistungen der Eingliederungshilfe im Pflegefall", "Methoden zur fallbezogenen Erschließung und Nutzung von Beratungs-, Sozial- und Hilfestrukturen sowie von Netzwerken"], "lessons": [{"title": "Teilhabeleistungen vor allem nach SGB IX", "body": "Rehabilitation und Teilhabe: Zielgruppen, Leistungsgruppen und Trägerstruktur nach SGB IX."}, {"title": "Teilhabe- und Gesamtplanverfahren", "body": "Verfahren zur Bedarfsermittlung und Planung (Teilhabe-/Gesamtplan): Beteiligung der Person, Fristen, Federführung."}, {"title": "Rehabilitations- und Teilhabeleistungen der verschiedenen Rehabilitationsträger", "body": "Zuständigkeiten der Träger (z. B. Kranken-, Renten-, Unfallversicherung, Eingliederungshilfe) und Weiterleitung bei Unzuständigkeit."}, {"title": "Leistungsformen der Eingliederungshilfe (z. B. Teilhabe am Arbeitsleben, medizinische Rehabilitation, Teilhabe an Bildung und Leistungen zur sozialen Teilhabe)", "body": "Leistungsformen einzelfallbezogen auswählen und beantragen; Wunsch- und Wahlrecht beachten."}, {"title": "Besondere Wohnformen und ambulant betreute Wohngemeinschaften", "body": "Unterscheidung besonderer Wohnformen und ambulanter WGs; Auswirkungen auf Leistungen und Alltag."}, {"title": "Pflegeleistungen in Kombination mit anderen SGB-Leistungen", "body": "Schnittstellen Pflege / Eingliederungshilfe / Krankenversicherung: Abgrenzung und sinnvolle Kombination."}, {"title": "Leistungen der Pflegeversicherung einschließlich Aufklärung, Auskunft und Pflegeberatung nach den §§ 7 ff. SGB XI sowie das Verhältnis zu anderen Sozialleistungen nach § 13 SGB XI", "body": "Pflegegrade, Sach-/Geldleistungen, Beratungspflichten und Konkurrenzregeln zu anderen Leistungen."}, {"title": "Leistungen der Hilfe zur Pflege nach SGB XII", "body": "Hilfe zur Pflege als nachrangige Leistung – Voraussetzungen und Zusammenspiel mit SGB XI."}, {"title": "Leistungen der gesetzlichen Krankenversicherung im Pflegefall (z. B. häusliche Krankenpflege und weitere Leistungen nach den §§ 37 ff. SGB V, medizinische Rehabilitation)", "body": "Häusliche Krankenpflege, Hilfsmittel und Reha-Leistungen der GKV im Pflegekontext kennen und beantragen."}, {"title": "Leistungen der Eingliederungshilfe im Pflegefall", "body": "Wenn Pflegebedarf und Teilhabebedarf zusammentreffen: Eingliederungshilfe gezielt einsetzen und abgrenzen."}, {"title": "Methoden zur fallbezogenen Erschließung und Nutzung von Beratungs-, Sozial- und Hilfestrukturen sowie von Netzwerken", "body": "Bedarf klären, Träger und Beratungsstellen vor Ort kennen, Netzwerke nutzen und Fallverläufe steuern."}], "cards": [{"q": "Teilhabeleistungen vor allem nach SGB IX", "a": "Rehabilitation und Teilhabe: Zielgruppen, Leistungsgruppen und Trägerstruktur nach SGB IX."}, {"q": "Teilhabe- und Gesamtplanverfahren", "a": "Verfahren zur Bedarfsermittlung und Planung (Teilhabe-/Gesamtplan): Beteiligung der Person, Fristen, Federführung."}, {"q": "Rehabilitations- und Teilhabeleistungen der verschiedenen Rehabilitationsträger", "a": "Zuständigkeiten der Träger (z. B. Kranken-, Renten-, Unfallversicherung, Eingliederungshilfe) und Weiterleitung bei Unzuständigkeit."}, {"q": "Leistungsformen der Eingliederungshilfe (z. B. Teilhabe am Arbeitsleben, medizinische Rehabilitation, Teilhabe an Bildung und Leistungen zur sozialen Teilhabe)", "a": "Leistungsformen einzelfallbezogen auswählen und beantragen; Wunsch- und Wahlrecht beachten."}, {"q": "Besondere Wohnformen und ambulant betreute Wohngemeinschaften", "a": "Unterscheidung besonderer Wohnformen und ambulanter WGs; Auswirkungen auf Leistungen und Alltag."}, {"q": "Pflegeleistungen in Kombination mit anderen SGB-Leistungen", "a": "Schnittstellen Pflege / Eingliederungshilfe / Krankenversicherung: Abgrenzung und sinnvolle Kombination."}, {"q": "Leistungen der Pflegeversicherung einschließlich Aufklärung, Auskunft und Pflegeberatung nach den §§ 7 ff. SGB XI sowie das Verhältnis zu anderen Sozialleistungen nach § 13 SGB XI", "a": "Pflegegrade, Sach-/Geldleistungen, Beratungspflichten und Konkurrenzregeln zu anderen Leistungen."}, {"q": "Leistungen der Hilfe zur Pflege nach SGB XII", "a": "Hilfe zur Pflege als nachrangige Leistung – Voraussetzungen und Zusammenspiel mit SGB XI."}, {"q": "Leistungen der gesetzlichen Krankenversicherung im Pflegefall (z. B. häusliche Krankenpflege und weitere Leistungen nach den §§ 37 ff. SGB V, medizinische Rehabilitation)", "a": "Häusliche Krankenpflege, Hilfsmittel und Reha-Leistungen der GKV im Pflegekontext kennen und beantragen."}, {"q": "Leistungen der Eingliederungshilfe im Pflegefall", "a": "Wenn Pflegebedarf und Teilhabebedarf zusammentreffen: Eingliederungshilfe gezielt einsetzen und abgrenzen."}, {"q": "Methoden zur fallbezogenen Erschließung und Nutzung von Beratungs-, Sozial- und Hilfestrukturen sowie von Netzwerken", "a": "Bedarf klären, Träger und Beratungsstellen vor Ort kennen, Netzwerke nutzen und Fallverläufe steuern."}], "quiz": [{"id": "9-1", "question": "Worum geht es im Unterrichtsinhalt „Teilhabeleistungen vor allem nach SGB IX“ (Modul 9)?", "options": ["Rehabilitation und Teilhabe: Zielgruppen, Leistungsgruppen und Trägerstruktur nach SGB …", "Nur um steuerrechtliche Pflichten ohne Bezug zur Betreuung", "Ausschließlich um strafrechtliche Sanktionen gegen Betreuer", "Um die Auflösung aller Sozialversicherungen"], "correct": 0, "explain": "Laut BtRegV-Anlage: Teilhabeleistungen vor allem nach SGB IX"}, {"id": "9-2", "question": "Worum geht es im Unterrichtsinhalt „Teilhabe- und Gesamtplanverfahren“ (Modul 9)?", "options": ["Verfahren zur Bedarfsermittlung und Planung (Teilhabe-/Gesamtplan): Beteiligung der Person, Fristen, …", "Nur um steuerrechtliche Pflichten ohne Bezug zur Betreuung", "Ausschließlich um strafrechtliche Sanktionen gegen Betreuer", "Um die Auflösung aller Sozialversicherungen"], "correct": 0, "explain": "Laut BtRegV-Anlage: Teilhabe- und Gesamtplanverfahren"}, {"id": "9-3", "question": "Worum geht es im Unterrichtsinhalt „Rehabilitations- und Teilhabeleistungen der verschiedenen Rehabilitationsträger“ (Modul 9)?", "options": ["Zuständigkeiten der Träger (z. B. Kranken-, Renten-, Unfallversicherung, Eingliederungshilfe) und …", "Nur um steuerrechtliche Pflichten ohne Bezug zur Betreuung", "Ausschließlich um strafrechtliche Sanktionen gegen Betreuer", "Um die Auflösung aller Sozialversicherungen"], "correct": 0, "explain": "Laut BtRegV-Anlage: Rehabilitations- und Teilhabeleistungen der verschiedenen Rehabilitationsträger"}, {"id": "9-4", "question": "Worum geht es im Unterrichtsinhalt „Leistungsformen der Eingliederungshilfe (z. B. Teilhabe am Arbeitsleben“ (Modul 9)?", "options": ["Leistungsformen einzelfallbezogen auswählen und beantragen; Wunsch- und Wahlrecht …", "Nur um steuerrechtliche Pflichten ohne Bezug zur Betreuung", "Ausschließlich um strafrechtliche Sanktionen gegen Betreuer", "Um die Auflösung aller Sozialversicherungen"], "correct": 0, "explain": "Laut BtRegV-Anlage: Leistungsformen der Eingliederungshilfe (z. B. Teilhabe am Arbeitsleben, medizinische Rehabilitation, Teilhabe an Bildung und Leistungen zur sozialen Teilhabe)"}, {"id": "9-5", "question": "Worum geht es im Unterrichtsinhalt „Besondere Wohnformen und ambulant betreute Wohngemeinschaften“ (Modul 9)?", "options": ["Unterscheidung besonderer Wohnformen und ambulanter WGs; Auswirkungen auf Leistungen und …", "Nur um steuerrechtliche Pflichten ohne Bezug zur Betreuung", "Ausschließlich um strafrechtliche Sanktionen gegen Betreuer", "Um die Auflösung aller Sozialversicherungen"], "correct": 0, "explain": "Laut BtRegV-Anlage: Besondere Wohnformen und ambulant betreute Wohngemeinschaften"}, {"id": "9-6", "question": "Worum geht es im Unterrichtsinhalt „Pflegeleistungen in Kombination mit anderen SGB-Leistungen“ (Modul 9)?", "options": ["Schnittstellen Pflege / Eingliederungshilfe / Krankenversicherung: Abgrenzung und sinnvolle …", "Nur um steuerrechtliche Pflichten ohne Bezug zur Betreuung", "Ausschließlich um strafrechtliche Sanktionen gegen Betreuer", "Um die Auflösung aller Sozialversicherungen"], "correct": 0, "explain": "Laut BtRegV-Anlage: Pflegeleistungen in Kombination mit anderen SGB-Leistungen"}, {"id": "9-7", "question": "Worum geht es im Unterrichtsinhalt „Leistungen der Pflegeversicherung einschließlich Aufklärung“ (Modul 9)?", "options": ["Pflegegrade, Sach-/Geldleistungen, Beratungspflichten und Konkurrenzregeln zu anderen …", "Nur um steuerrechtliche Pflichten ohne Bezug zur Betreuung", "Ausschließlich um strafrechtliche Sanktionen gegen Betreuer", "Um die Auflösung aller Sozialversicherungen"], "correct": 0, "explain": "Laut BtRegV-Anlage: Leistungen der Pflegeversicherung einschließlich Aufklärung, Auskunft und Pflegeberatung nach den §§ 7 ff. SGB XI sowie das Verhältnis zu anderen Sozialleistungen nach § 13 SGB XI"}, {"id": "9-8", "question": "Worum geht es im Unterrichtsinhalt „Leistungen der Hilfe zur Pflege nach SGB XII“ (Modul 9)?", "options": ["Hilfe zur Pflege als nachrangige Leistung – Voraussetzungen und Zusammenspiel mit SGB …", "Nur um steuerrechtliche Pflichten ohne Bezug zur Betreuung", "Ausschließlich um strafrechtliche Sanktionen gegen Betreuer", "Um die Auflösung aller Sozialversicherungen"], "correct": 0, "explain": "Laut BtRegV-Anlage: Leistungen der Hilfe zur Pflege nach SGB XII"}, {"id": "9-9", "question": "Worum geht es im Unterrichtsinhalt „Leistungen der gesetzlichen Krankenversicherung im Pflegefall (z. B. häusliche Krankenpflege und weitere Leistungen nach den §§ 37 ff. SGB V“ (Modul 9)?", "options": ["Häusliche Krankenpflege, Hilfsmittel und Reha-Leistungen der GKV im Pflegekontext kennen und …", "Nur um steuerrechtliche Pflichten ohne Bezug zur Betreuung", "Ausschließlich um strafrechtliche Sanktionen gegen Betreuer", "Um die Auflösung aller Sozialversicherungen"], "correct": 0, "explain": "Laut BtRegV-Anlage: Leistungen der gesetzlichen Krankenversicherung im Pflegefall (z. B. häusliche Krankenpflege und weitere Leistungen nach den §§ 37 ff. SGB V, medizinische Rehabilitation)"}, {"id": "9-10", "question": "Worum geht es im Unterrichtsinhalt „Leistungen der Eingliederungshilfe im Pflegefall“ (Modul 9)?", "options": ["Wenn Pflegebedarf und Teilhabebedarf zusammentreffen: Eingliederungshilfe gezielt einsetzen und …", "Nur um steuerrechtliche Pflichten ohne Bezug zur Betreuung", "Ausschließlich um strafrechtliche Sanktionen gegen Betreuer", "Um die Auflösung aller Sozialversicherungen"], "correct": 0, "explain": "Laut BtRegV-Anlage: Leistungen der Eingliederungshilfe im Pflegefall"}, {"id": "9-11", "question": "Worum geht es im Unterrichtsinhalt „Methoden zur fallbezogenen Erschließung und Nutzung von Beratungs-“ (Modul 9)?", "options": ["Bedarf klären, Träger und Beratungsstellen vor Ort kennen, Netzwerke nutzen und Fallverläufe …", "Nur um steuerrechtliche Pflichten ohne Bezug zur Betreuung", "Ausschließlich um strafrechtliche Sanktionen gegen Betreuer", "Um die Auflösung aller Sozialversicherungen"], "correct": 0, "explain": "Laut BtRegV-Anlage: Methoden zur fallbezogenen Erschließung und Nutzung von Beratungs-, Sozial- und Hilfestrukturen sowie von Netzwerken"}]}, {"id": 10, "title": "Grundlagen der Kommunikation und Praxistransfer", "hours": 30, "area": "Kommunikation (§ 3 Abs. 3)", "legal_ref": "Zu Absatz 3", "summary": "Kommunikationskonzepte, Haltung, Diversität, Konflikte und Machtreflexion.", "topics": ["Theoretische Konzepte und Methoden der Kommunikation", "Grundhaltungen und Techniken der Kommunikation", "Diversitätssensible Kommunikation", "Ressourcenorientierte Kommunikation", "Konfliktmanagement in der Kommunikation", "Selbst- und Machtreflexion"], "lessons": [{"title": "Theoretische Konzepte und Methoden der Kommunikation", "body": "Grundmodelle (z. B. Sender-Empfänger, Vier-Seiten, personenzentriert) und ihre Bedeutung für Beratungs- und Betreuungsgespräche."}, {"title": "Grundhaltungen und Techniken der Kommunikation", "body": "Empathie, Wertschätzung, Kongruenz; aktives Zuhören, offene Fragen, Paraphrasieren, Klarheit."}, {"title": "Diversitätssensible Kommunikation", "body": "Kultur, Sprache, Beeinträchtigung, Geschlecht und Biografie berücksichtigen; Zugänglichkeit herstellen."}, {"title": "Ressourcenorientierte Kommunikation", "body": "Stärken, Fähigkeiten und bestehende Netze in den Mittelpunkt stellen statt nur Defizite."}, {"title": "Konfliktmanagement in der Kommunikation", "body": "Konflikte früh erkennen, Interessen klären, deeskalieren und tragfähige Vereinbarungen anstreben."}, {"title": "Selbst- und Machtreflexion", "body": "Die strukturelle Macht des Betreuers reflektieren und Bevormundung bewusst begrenzen."}], "cards": [{"q": "Theoretische Konzepte und Methoden der Kommunikation", "a": "Grundmodelle (z. B. Sender-Empfänger, Vier-Seiten, personenzentriert) und ihre Bedeutung für Beratungs- und Betreuungsgespräche."}, {"q": "Grundhaltungen und Techniken der Kommunikation", "a": "Empathie, Wertschätzung, Kongruenz; aktives Zuhören, offene Fragen, Paraphrasieren, Klarheit."}, {"q": "Diversitätssensible Kommunikation", "a": "Kultur, Sprache, Beeinträchtigung, Geschlecht und Biografie berücksichtigen; Zugänglichkeit herstellen."}, {"q": "Ressourcenorientierte Kommunikation", "a": "Stärken, Fähigkeiten und bestehende Netze in den Mittelpunkt stellen statt nur Defizite."}, {"q": "Konfliktmanagement in der Kommunikation", "a": "Konflikte früh erkennen, Interessen klären, deeskalieren und tragfähige Vereinbarungen anstreben."}, {"q": "Selbst- und Machtreflexion", "a": "Die strukturelle Macht des Betreuers reflektieren und Bevormundung bewusst begrenzen."}], "quiz": [{"id": "10-1", "question": "Worum geht es im Unterrichtsinhalt „Theoretische Konzepte und Methoden der Kommunikation“ (Modul 10)?", "options": ["Grundmodelle (z. B. Sender-Empfänger, Vier-Seiten, personenzentriert) und ihre Bedeutung für Beratungs- und …", "Nur um steuerrechtliche Pflichten ohne Bezug zur Betreuung", "Ausschließlich um strafrechtliche Sanktionen gegen Betreuer", "Um die Auflösung aller Sozialversicherungen"], "correct": 0, "explain": "Laut BtRegV-Anlage: Theoretische Konzepte und Methoden der Kommunikation"}, {"id": "10-2", "question": "Worum geht es im Unterrichtsinhalt „Grundhaltungen und Techniken der Kommunikation“ (Modul 10)?", "options": ["Empathie, Wertschätzung, Kongruenz; aktives Zuhören, offene Fragen, Paraphrasieren, …", "Nur um steuerrechtliche Pflichten ohne Bezug zur Betreuung", "Ausschließlich um strafrechtliche Sanktionen gegen Betreuer", "Um die Auflösung aller Sozialversicherungen"], "correct": 0, "explain": "Laut BtRegV-Anlage: Grundhaltungen und Techniken der Kommunikation"}, {"id": "10-3", "question": "Worum geht es im Unterrichtsinhalt „Diversitätssensible Kommunikation“ (Modul 10)?", "options": ["Kultur, Sprache, Beeinträchtigung, Geschlecht und Biografie berücksichtigen; Zugänglichkeit …", "Nur um steuerrechtliche Pflichten ohne Bezug zur Betreuung", "Ausschließlich um strafrechtliche Sanktionen gegen Betreuer", "Um die Auflösung aller Sozialversicherungen"], "correct": 0, "explain": "Laut BtRegV-Anlage: Diversitätssensible Kommunikation"}, {"id": "10-4", "question": "Worum geht es im Unterrichtsinhalt „Ressourcenorientierte Kommunikation“ (Modul 10)?", "options": ["Stärken, Fähigkeiten und bestehende Netze in den Mittelpunkt stellen statt nur …", "Nur um steuerrechtliche Pflichten ohne Bezug zur Betreuung", "Ausschließlich um strafrechtliche Sanktionen gegen Betreuer", "Um die Auflösung aller Sozialversicherungen"], "correct": 0, "explain": "Laut BtRegV-Anlage: Ressourcenorientierte Kommunikation"}, {"id": "10-5", "question": "Worum geht es im Unterrichtsinhalt „Konfliktmanagement in der Kommunikation“ (Modul 10)?", "options": ["Konflikte früh erkennen, Interessen klären, deeskalieren und tragfähige Vereinbarungen …", "Nur um steuerrechtliche Pflichten ohne Bezug zur Betreuung", "Ausschließlich um strafrechtliche Sanktionen gegen Betreuer", "Um die Auflösung aller Sozialversicherungen"], "correct": 0, "explain": "Laut BtRegV-Anlage: Konfliktmanagement in der Kommunikation"}, {"id": "10-6", "question": "Worum geht es im Unterrichtsinhalt „Selbst- und Machtreflexion“ (Modul 10)?", "options": ["Die strukturelle Macht des Betreuers reflektieren und Bevormundung bewusst …", "Nur um steuerrechtliche Pflichten ohne Bezug zur Betreuung", "Ausschließlich um strafrechtliche Sanktionen gegen Betreuer", "Um die Auflösung aller Sozialversicherungen"], "correct": 0, "explain": "Laut BtRegV-Anlage: Selbst- und Machtreflexion"}]}, {"id": 11, "title": "Betreuungsspezifische Kommunikation/Methoden der unterstützten Entscheidungsfindung", "hours": 45, "area": "Kommunikation (§ 3 Abs. 3)", "legal_ref": "Zu Absatz 3", "summary": "Unterstützte Entscheidungsfindung, barrierefreie Kommunikation und Willensermittlung.", "topics": ["Auswirkungen spezifischer krankheits- bzw. beeinträchtigungsbedingter Einschränkungen auf die Fähigkeit der Kommunikation und der Entscheidungsfindung", "Bedeutung sozialer und umweltbedingter Einflussfaktoren auf Autonomie und Entscheidungsfindung von betreuten Menschen", "Methoden zur kommunikativen Verhinderung von Ausschlussmechanismen", "Barrierefreie Kommunikation, leichte Sprache", "Drei- oder Mehrparteien-Interaktion mit betreuten Menschen", "Erkennen und Ermitteln von Wunsch, Wille und Präferenzen von betreuten Menschen in der Kommunikation einschließlich biographischer Aspekte und Werthaltungen", "Methoden der Unterstützung bei der Entscheidungsfindung betreuter Menschen und praktische Erprobung"], "lessons": [{"title": "Auswirkungen spezifischer krankheits- bzw. beeinträchtigungsbedingter Einschränkungen auf die Fähigkeit der Kommunikation und der Entscheidungsfindung", "body": "Krankheit/Beeinträchtigung kann Verstehen, Ausdruck und Abwägen erschweren – Unterstützung anpassen, nicht vorschnell ersetzen."}, {"title": "Bedeutung sozialer und umweltbedingter Einflussfaktoren auf Autonomie und Entscheidungsfindung von betreuten Menschen", "body": "Druck durch Umfeld, Armut, Barrieren und Institutionen beeinflussen Autonomie; diese Faktoren aktiv mitdenken."}, {"title": "Methoden zur kommunikativen Verhinderung von Ausschlussmechanismen", "body": "Gesprächssettings so gestalten, dass die betreute Person nicht übergangen wird (Zeit, Tempo, Einbezug, Nachfragen)."}, {"title": "Barrierefreie Kommunikation, leichte Sprache", "body": "Leichte Sprache, Hilfsmittel, Dolmetschen und barrierefreie Formate einsetzen."}, {"title": "Drei- oder Mehrparteien-Interaktion mit betreuten Menschen", "body": "Gespräche mit Angehörigen, Ärzten u. a. so moderieren, dass die betreute Person zentral bleibt."}, {"title": "Erkennen und Ermitteln von Wunsch, Wille und Präferenzen von betreuten Menschen in der Kommunikation einschließlich biographischer Aspekte und Werthaltungen", "body": "Mehrquellenansatz: Gespräch, Beobachtung, Biografie, Bezugspersonen – dokumentieren und spiegeln."}, {"title": "Methoden der Unterstützung bei der Entscheidungsfindung betreuter Menschen und praktische Erprobung", "body": "Optionen erklären, Vor- und Nachteile erarbeiten, Zeit geben, Entscheidung der Person ermöglichen; Ersatzentscheidung nur nachrangig."}], "cards": [{"q": "Auswirkungen spezifischer krankheits- bzw. beeinträchtigungsbedingter Einschränkungen auf die Fähigkeit der Kommunikation und der Entscheidungsfindung", "a": "Krankheit/Beeinträchtigung kann Verstehen, Ausdruck und Abwägen erschweren – Unterstützung anpassen, nicht vorschnell ersetzen."}, {"q": "Bedeutung sozialer und umweltbedingter Einflussfaktoren auf Autonomie und Entscheidungsfindung von betreuten Menschen", "a": "Druck durch Umfeld, Armut, Barrieren und Institutionen beeinflussen Autonomie; diese Faktoren aktiv mitdenken."}, {"q": "Methoden zur kommunikativen Verhinderung von Ausschlussmechanismen", "a": "Gesprächssettings so gestalten, dass die betreute Person nicht übergangen wird (Zeit, Tempo, Einbezug, Nachfragen)."}, {"q": "Barrierefreie Kommunikation, leichte Sprache", "a": "Leichte Sprache, Hilfsmittel, Dolmetschen und barrierefreie Formate einsetzen."}, {"q": "Drei- oder Mehrparteien-Interaktion mit betreuten Menschen", "a": "Gespräche mit Angehörigen, Ärzten u. a. so moderieren, dass die betreute Person zentral bleibt."}, {"q": "Erkennen und Ermitteln von Wunsch, Wille und Präferenzen von betreuten Menschen in der Kommunikation einschließlich biographischer Aspekte und Werthaltungen", "a": "Mehrquellenansatz: Gespräch, Beobachtung, Biografie, Bezugspersonen – dokumentieren und spiegeln."}, {"q": "Methoden der Unterstützung bei der Entscheidungsfindung betreuter Menschen und praktische Erprobung", "a": "Optionen erklären, Vor- und Nachteile erarbeiten, Zeit geben, Entscheidung der Person ermöglichen; Ersatzentscheidung nur nachrangig."}], "quiz": [{"id": "11-1", "question": "Worum geht es im Unterrichtsinhalt „Auswirkungen spezifischer krankheits- bzw. beeinträchtigungsbedingter Einschränkungen auf die Fähigkeit der Kommunikation und der Entscheidungsfindung“ (Modul 11)?", "options": ["Krankheit/Beeinträchtigung kann Verstehen, Ausdruck und Abwägen erschweren – Unterstützung anpassen, nicht …", "Nur um steuerrechtliche Pflichten ohne Bezug zur Betreuung", "Ausschließlich um strafrechtliche Sanktionen gegen Betreuer", "Um die Auflösung aller Sozialversicherungen"], "correct": 0, "explain": "Laut BtRegV-Anlage: Auswirkungen spezifischer krankheits- bzw. beeinträchtigungsbedingter Einschränkungen auf die Fähigkeit der Kommunikation und der Entscheidungsfindung"}, {"id": "11-2", "question": "Worum geht es im Unterrichtsinhalt „Bedeutung sozialer und umweltbedingter Einflussfaktoren auf Autonomie und Entscheidungsfindung von betreuten Menschen“ (Modul 11)?", "options": ["Druck durch Umfeld, Armut, Barrieren und Institutionen beeinflussen Autonomie; diese Faktoren aktiv …", "Nur um steuerrechtliche Pflichten ohne Bezug zur Betreuung", "Ausschließlich um strafrechtliche Sanktionen gegen Betreuer", "Um die Auflösung aller Sozialversicherungen"], "correct": 0, "explain": "Laut BtRegV-Anlage: Bedeutung sozialer und umweltbedingter Einflussfaktoren auf Autonomie und Entscheidungsfindung von betreuten Menschen"}, {"id": "11-3", "question": "Worum geht es im Unterrichtsinhalt „Methoden zur kommunikativen Verhinderung von Ausschlussmechanismen“ (Modul 11)?", "options": ["Gesprächssettings so gestalten, dass die betreute Person nicht übergangen wird (Zeit, Tempo, Einbezug, …", "Nur um steuerrechtliche Pflichten ohne Bezug zur Betreuung", "Ausschließlich um strafrechtliche Sanktionen gegen Betreuer", "Um die Auflösung aller Sozialversicherungen"], "correct": 0, "explain": "Laut BtRegV-Anlage: Methoden zur kommunikativen Verhinderung von Ausschlussmechanismen"}, {"id": "11-4", "question": "Worum geht es im Unterrichtsinhalt „Barrierefreie Kommunikation“ (Modul 11)?", "options": ["Leichte Sprache, Hilfsmittel, Dolmetschen und barrierefreie Formate …", "Nur um steuerrechtliche Pflichten ohne Bezug zur Betreuung", "Ausschließlich um strafrechtliche Sanktionen gegen Betreuer", "Um die Auflösung aller Sozialversicherungen"], "correct": 0, "explain": "Laut BtRegV-Anlage: Barrierefreie Kommunikation, leichte Sprache"}, {"id": "11-5", "question": "Worum geht es im Unterrichtsinhalt „Drei- oder Mehrparteien-Interaktion mit betreuten Menschen“ (Modul 11)?", "options": ["Gespräche mit Angehörigen, Ärzten u. a. so moderieren, dass die betreute Person zentral …", "Nur um steuerrechtliche Pflichten ohne Bezug zur Betreuung", "Ausschließlich um strafrechtliche Sanktionen gegen Betreuer", "Um die Auflösung aller Sozialversicherungen"], "correct": 0, "explain": "Laut BtRegV-Anlage: Drei- oder Mehrparteien-Interaktion mit betreuten Menschen"}, {"id": "11-6", "question": "Worum geht es im Unterrichtsinhalt „Erkennen und Ermitteln von Wunsch“ (Modul 11)?", "options": ["Mehrquellenansatz: Gespräch, Beobachtung, Biografie, Bezugspersonen – dokumentieren und …", "Nur um steuerrechtliche Pflichten ohne Bezug zur Betreuung", "Ausschließlich um strafrechtliche Sanktionen gegen Betreuer", "Um die Auflösung aller Sozialversicherungen"], "correct": 0, "explain": "Laut BtRegV-Anlage: Erkennen und Ermitteln von Wunsch, Wille und Präferenzen von betreuten Menschen in der Kommunikation einschließlich biographischer Aspekte und Werthaltungen"}, {"id": "11-7", "question": "Worum geht es im Unterrichtsinhalt „Methoden der Unterstützung bei der Entscheidungsfindung betreuter Menschen und praktische Erprobung“ (Modul 11)?", "options": ["Optionen erklären, Vor- und Nachteile erarbeiten, Zeit geben, Entscheidung der Person ermöglichen; …", "Nur um steuerrechtliche Pflichten ohne Bezug zur Betreuung", "Ausschließlich um strafrechtliche Sanktionen gegen Betreuer", "Um die Auflösung aller Sozialversicherungen"], "correct": 0, "explain": "Laut BtRegV-Anlage: Methoden der Unterstützung bei der Entscheidungsfindung betreuter Menschen und praktische Erprobung"}]}]};
+      state.fullModules = data.modules;
+      state.meta = data.meta;
+      state.modules = listSummary();
+      state.loading = false;
+      render();
+    } catch (err) {
+      state.loading = false;
+      state.error = err.message;
+      render();
+    }
+  }
+
+  function setRoute(route) {
+    state.route = route;
+    state.error = null;
+    if (route !== "quiz" && route !== "result") {
+      state.quiz = null;
+      state.review = null;
+      state.selections = {};
+      state.quizIndex = 0;
+    }
+    render();
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }
+
+  function updateTabs() {
+    const active =
+      state.route === "home"
+        ? "home"
+        : state.route === "progress"
+          ? "progress"
+          : "modules";
+    tabbar.querySelectorAll(".tab").forEach((btn) => {
+      btn.classList.toggle("is-active", btn.dataset.route === active);
+    });
+  }
+
+  function escapeHtml(str) {
+    return String(str)
+      .replaceAll("&", "&amp;")
+      .replaceAll("<", "&lt;")
+      .replaceAll(">", "&gt;")
+      .replaceAll('"', "&quot;");
+  }
+
+  function renderHome() {
+    const prog = overallProgress();
+    const nextId = continueModuleId();
+    return `
+      <section class="screen">
+        <div class="hero">
+          <h1 class="brand">GBB Lernen</h1>
+          <p class="hero-line">Sachkunde für gesetzliche Berufsbetreuung</p>
+          <p class="hero-sub">Alle Unterrichtsinhalte der BtRegV-Anlage – Originalpunkte mit Lerntext und Quiz.</p>
+          <div class="cta-row">
+            <button class="btn btn-primary" data-action="open-module" data-id="${nextId}">Weiterlernen</button>
+            <button class="btn btn-ghost" data-action="go" data-route="modules">Alle Module</button>
+          </div>
+        </div>
+        <div class="panel after-hero">
+          <div class="stat-line">
+            <div class="stat"><strong>${prog.percent}%</strong><span>Module bestanden</span></div>
+            <div class="stat"><strong>${state.meta?.total_hours || 270}</strong><span>Zeitstunden (Lehrgang)</span></div>
+            <div class="stat"><strong>${state.meta?.total_official_topics || state.meta?.total_questions || 0}</strong><span>Original-Inhalte</span></div>
+            <div class="stat"><strong>${state.meta?.total_questions || 0}</strong><span>Quizfragen</span></div>
+          </div>
+          <p class="disclaimer">${escapeHtml(state.meta?.disclaimer || "")}</p>
+          ${state.meta?.source ? `<p class="disclaimer"><a href="${state.meta.source.pdf_url}" target="_blank" rel="noopener">Original-PDF BtRegV (gesetze-im-internet.de)</a> · ${escapeHtml(state.meta.source.citation || "")}</p>` : ""}
+        </div>
+      </section>
+    `;
+  }
+
+  function renderModules() {
+    const rows = state.modules
+      .map((m) => {
+        const p = moduleProgress(m.id);
+        const badge = p.passed
+          ? `<span class="badge">Bestanden ${p.bestPercent}%</span>`
+          : p.bestPercent
+            ? `<span class="badge warn">Bestwert ${p.bestPercent}%</span>`
+            : "";
+        return `
+          <button class="module-row" data-action="open-module" data-id="${m.id}">
+            <div class="mod-num">${m.id}</div>
+            <div class="mod-body">
+              <h3>${escapeHtml(m.title)}</h3>
+              <p>${escapeHtml(m.area)} · ${m.quiz_count} Fragen</p>
+              ${badge}
+            </div>
+            <div class="mod-meta">${m.hours} Std.</div>
+          </button>
+        `;
+      })
+      .join("");
+
+    return `
+      <section class="screen panel">
+        <h2 class="section-title">Module</h2>
+        <p class="lede">Inhaltliche Anforderungen an die Sachkunde – Anlage zu § 3 Abs. 4 BtRegV.</p>
+        <div class="module-list">${rows}</div>
+      </section>
+    `;
+  }
+
+  function renderProgress() {
+    const prog = overallProgress();
+    const rows = state.modules
+      .map((m) => {
+        const p = moduleProgress(m.id);
+        return `
+          <div class="learn-card">
+            <strong>Modul ${m.id}: ${escapeHtml(m.title)}</strong>
+            <div class="progress-bar"><span style="width:${p.bestPercent}%"></span></div>
+            <p>${p.passed ? "Bestanden" : "Offen"} · ${p.attempts} Versuch${p.attempts === 1 ? "" : "e"} · Bestwert ${p.bestPercent}%</p>
+          </div>
+        `;
+      })
+      .join("");
+
+    return `
+      <section class="screen panel">
+        <h2 class="section-title">Fortschritt</h2>
+        <p class="lede">${prog.done} von ${prog.total} Modulen mit mindestens 60 % bestanden.</p>
+        <div class="progress-bar" style="height:14px;margin-bottom:18px"><span style="width:${prog.percent}%"></span></div>
+        <div class="card-stack">${rows}</div>
+        <button class="btn btn-soft" data-action="reset-progress" style="width:100%;margin-top:8px">Fortschritt zurücksetzen</button>
+      </section>
+    `;
+  }
+
+function renderModuleDetail() {
+    const m = state.module;
+    if (!m) {
+      return `
+        <section class="screen">
+          <div class="topbar">
+            <button class="back" data-action="go" data-route="modules" aria-label="Zurück">←</button>
+            <h2>Modul</h2>
+          </div>
+          <div class="panel"><p class="lede">Modul wird geladen…</p></div>
+        </section>`;
+    }
+    const p = moduleProgress(m.id);
+    const lessons = (m.lessons || (m.topics || []).map((t) => ({ title: t, body: "" })))
+      .map(
+        (lesson, idx) => `
+        <article class="learn-card">
+          <strong>${idx + 1}. ${escapeHtml(lesson.title || lesson)}</strong>
+          ${lesson.body ? `<p>${escapeHtml(lesson.body)}</p>` : ""}
+        </article>`
+      )
+      .join("");
+
+    return `
+      <section class="screen">
+        <div class="topbar">
+          <button class="back" data-action="go" data-route="modules" aria-label="Zurück">←</button>
+          <h2>Modul ${m.id}</h2>
+        </div>
+        <div class="panel">
+          <h2 class="section-title">${escapeHtml(m.title)}</h2>
+          <p class="lede">${escapeHtml(m.summary)} · ${m.hours} Zeitstunden${m.legal_ref ? ` · ${escapeHtml(m.legal_ref)}` : ""}</p>
+          ${p.passed ? `<span class="badge">Quiz bestanden (${p.bestPercent}%)</span>` : ""}
+          <h3 class="section-title" style="font-size:1.15rem;margin-top:20px">Unterrichtsinhalte (BtRegV-Anlage, Original)</h3>
+          <p class="lede">Alle Punkte aus der amtlichen Anlage – mit Lerntext zur Wiederholung.</p>
+          <div class="card-stack">${lessons}</div>
+          <div class="cta-row" style="margin-top:8px">
+            <button class="btn btn-ink" data-action="start-quiz" data-id="${m.id}">Quiz starten (${(m.quiz || []).length || m.quiz_count || 0} Fragen)</button>
+          </div>
+        </div>
+      </section>
+    `;
+  }
+
+  function renderQuiz() {
+    const q = state.quiz.questions[state.quizIndex];
+    const total = state.quiz.questions.length;
+    const pct = Math.round((state.quizIndex / total) * 100);
+    const selected = state.selections[q.id];
+    const options = q.options
+      .map(
+        (opt, idx) => `
+        <button class="option ${selected === idx ? "is-selected" : ""}" data-action="select-option" data-idx="${idx}">
+          ${escapeHtml(opt)}
+        </button>`
+      )
+      .join("");
+
+    return `
+      <section class="screen">
+        <div class="topbar">
+          <button class="back" data-action="open-module" data-id="${state.quiz.module_id}" aria-label="Zurück">←</button>
+          <h2>Quiz · ${state.quizIndex + 1}/${total}</h2>
+        </div>
+        <div class="panel">
+          <div class="quiz-progress"><i style="width:${pct}%"></i></div>
+          <p class="q-text">${escapeHtml(q.question)}</p>
+          <div class="options">${options}</div>
+          <div class="cta-row" style="margin-top:18px">
+            <button class="btn btn-ink" data-action="next-question" ${selected == null ? "disabled" : ""}>
+              ${state.quizIndex + 1 === total ? "Auswerten" : "Weiter"}
+            </button>
+          </div>
+        </div>
+      </section>
+    `;
+  }
+
+  function renderResult() {
+    const r = state.review;
+    const cls = r.passed ? "pass" : "fail";
+    const details = r.results
+      .map((item, i) => {
+        const q = state.quiz.questions.find((x) => x.id === item.question_id);
+        return `
+          <article class="learn-card">
+            <strong>${i + 1}. ${escapeHtml(q?.question || "")}</strong>
+            <p>${item.is_correct ? "Richtig" : "Falsch"} · ${escapeHtml(item.explain)}</p>
+          </article>`;
+      })
+      .join("");
+
+    return `
+      <section class="screen">
+        <div class="result-hero">
+          <p>Modul ${r.module_id}</p>
+          <div class="score ${cls}">${r.percent}%</div>
+          <p class="${cls}">${r.correct} von ${r.total} richtig · ${r.passed ? "Bestanden" : "Noch nicht bestanden (60 % nötig)"}</p>
+        </div>
+        <div class="panel">
+          <div class="card-stack">${details}</div>
+          <div class="cta-row" style="margin-top:12px;display:grid">
+            <button class="btn btn-ink" data-action="start-quiz" data-id="${r.module_id}">Nochmal üben</button>
+            <button class="btn btn-soft" data-action="go" data-route="modules">Zur Modulübersicht</button>
+          </div>
+        </div>
+      </section>
+    `;
+  }
+
+  function render() {
+    updateTabs();
+    if (state.loading) {
+      app.innerHTML = `<section class="screen panel"><p>Laden…</p></section>`;
+      return;
+    }
+    if (state.error) {
+      app.innerHTML = `<section class="screen panel"><p>${escapeHtml(state.error)}</p></section>`;
+      return;
+    }
+
+    let html = "";
+    switch (state.route) {
+      case "home":
+        html = renderHome();
+        break;
+      case "modules":
+        html = renderModules();
+        break;
+      case "progress":
+        html = renderProgress();
+        break;
+      case "module":
+        html = renderModuleDetail();
+        break;
+      case "quiz":
+        html = renderQuiz();
+        break;
+      case "result":
+        html = renderResult();
+        break;
+      default:
+        html = renderHome();
+    }
+    app.innerHTML = html;
+  }
+
+  function openModule(id) {
+    state.route = "module";
+    state.module = getFullModule(id);
+    markCardsDone(id);
+    render();
+  }
+
+  function startQuiz(id) {
+    const module = getFullModule(id);
+    if (!module) return;
+    state.quiz = {
+      module_id: id,
+      title: module.title,
+      questions: module.quiz.map((q) => ({
+        id: q.id,
+        question: q.question,
+        options: q.options,
+        correct: q.correct,
+        explain: q.explain,
+      })),
+    };
+    state.quizIndex = 0;
+    state.selections = {};
+    state.review = null;
+    state.route = "quiz";
+    render();
+  }
+
+  function submitQuiz() {
+    const questions = state.quiz.questions;
+    let correctCount = 0;
+    const results = questions.map((q) => {
+      const selected = state.selections[q.id];
+      const isCorrect = selected === q.correct;
+      if (isCorrect) correctCount += 1;
+      return {
+        question_id: q.id,
+        selected,
+        correct_index: q.correct,
+        is_correct: isCorrect,
+        explain: q.explain,
+      };
+    });
+    const total = questions.length;
+    const percent = total ? Math.round((correctCount / total) * 100) : 0;
+    const passed = percent >= 60;
+    markQuizResult(state.quiz.module_id, percent, passed);
+    state.review = {
+      module_id: state.quiz.module_id,
+      correct: correctCount,
+      total,
+      percent,
+      passed,
+      results,
+    };
+    state.route = "result";
+    render();
+  }
+
+  function showApp() {
+    gate.classList.add("hidden");
+    appShell.classList.remove("hidden");
+    boot();
+  }
+
+  loginForm.addEventListener("submit", (e) => {
+    e.preventDefault();
+    const user = document.getElementById("user").value.trim();
+    const pass = document.getElementById("pass").value;
+    if (user === EXPECTED_USER && pass === EXPECTED_PASS) {
+      setAuthed();
+      gateError.textContent = "";
+      showApp();
+    } else {
+      gateError.textContent = "Benutzer oder Passwort falsch.";
+    }
+  });
+
+  tabbar.addEventListener("click", (e) => {
+    const btn = e.target.closest("[data-route]");
+    if (!btn) return;
+    setRoute(btn.dataset.route);
+  });
+
+  app.addEventListener("click", (e) => {
+    const el = e.target.closest("[data-action]");
+    if (!el) return;
+    const action = el.dataset.action;
+
+    if (action === "go") setRoute(el.dataset.route);
+    if (action === "open-module") openModule(Number(el.dataset.id));
+    if (action === "start-quiz") startQuiz(Number(el.dataset.id));
+    if (action === "select-option") {
+      const q = state.quiz.questions[state.quizIndex];
+      state.selections[q.id] = Number(el.dataset.idx);
+      render();
+    }
+    if (action === "next-question") {
+      const q = state.quiz.questions[state.quizIndex];
+      if (state.selections[q.id] == null) return;
+      if (state.quizIndex + 1 >= state.quiz.questions.length) {
+        submitQuiz();
+      } else {
+        state.quizIndex += 1;
+        render();
+      }
+    }
+    if (action === "reset-progress") {
+      if (confirm("Gesamten Lernfortschritt wirklich löschen?")) {
+        localStorage.removeItem(STORAGE_KEY);
+        render();
+      }
+    }
+  });
+
+  if (isAuthed()) showApp();
+})();
+
+</script>
+</body>
+</html>

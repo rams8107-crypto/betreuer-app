@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" role="img" aria-label="GBB Lernen">
+  <defs>
+    <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#14352C"/>
+      <stop offset="100%" stop-color="#0B1F1A"/>
+    </linearGradient>
+  </defs>
+  <rect width="128" height="128" rx="28" fill="url(#g)"/>
+  <path d="M28 86V42h22c14 0 22 7 22 18s-8 18-22 18H44v8H28zm16-22h6c5 0 8-2.5 8-7s-3-7-8-7h-6v14z" fill="#E8F0EA"/>
+  <path d="M78 42h16c18 0 30 11 30 28s-12 28-30 28H78V42zm16 42c10 0 16-6 16-14s-6-14-16-14H94v28h0z" fill="#C4A35A"/>
+</svg>

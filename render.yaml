@@ -1,11 +1,16 @@
-# Veraltet: Blueprint liegt im Repo-Root als /render.yaml
-# (rootDir: betreuer_cloud_pwa)
+# GBB Lernen – Deploy auf Render (Blueprint)
 services:
   - type: web
     name: gbb-lernen
     runtime: python
     plan: free
     region: frankfurt
+    rootDir: betreuer_cloud_pwa
     buildCommand: pip install -r requirements.txt
     startCommand: uvicorn main:app --host 0.0.0.0 --port $PORT
     healthCheckPath: /api/health
+    envVars:
+      - key: GBB_USER
+        sync: false
+      - key: GBB_PASSWORD
+        sync: false

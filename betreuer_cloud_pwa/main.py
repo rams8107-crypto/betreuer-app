@@ -1,17 +1,24 @@
-import os
-import json
 import datetime
-from fastapi import FastAPI, HTTPException, Depends
+import os
+import secrets
+from typing import List, Optional
+
+from fastapi import Depends, FastAPI, HTTPException, status
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import HTMLResponse
+from fastapi.security import HTTPBasic, HTTPBasicCredentials
 from fastapi.staticfiles import StaticFiles
-from fastapi.responses import HTMLResponse, FileResponse
-from pydantic import BaseModel
-from typing import Optional, List
-from cryptography.fernet import Fernet
+from pydantic import BaseModel, Field
 
-app = FastAPI(title="BetreuerPlus Cloud Edition")
+from content.modules import MODULES, get_module, progress_meta
 
-# Enable CORS for iPhone Safari access
+app = FastAPI(title="GBB Lernen", version="1.1.0")
+security = HTTPBasic()
+
+# Privat: Zugang nur mit Benutzer/Passwort (per Env überschreibbar)
+APP_USER = os.getenv("GBB_USER", "ramazan")
+APP_PASSWORD = os.getenv("GBB_PASSWORD", "GBBprivat26")
+
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -20,93 +27,152 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Encryption Key for Option 3 Cloud Backups
-BACKUP_ENCRYPTION_KEY = Fernet.generate_key()
-fernet = Fernet(BACKUP_ENCRYPTION_KEY)
 
-# Mock In-Memory / SQLite Data Store
-clients_db = [
-    {"id": 1, "user_id": 1, "first_name": "Hans", "last_name": "Müller", "case_number": "31 K 102/26", "court": "Amtsgericht Köln"},
-    {"id": 2, "user_id": 1, "first_name": "Anna", "last_name": "Schmidt", "case_number": "14 K 88/25", "court": "Amtsgericht Bonn"}
-]
+def require_login(credentials: HTTPBasicCredentials = Depends(security)) -> str:
+    user_ok = secrets.compare_digest(credentials.username, APP_USER)
+    pass_ok = secrets.compare_digest(credentials.password, APP_PASSWORD)
+    if not (user_ok and pass_ok):
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Ungültige Zugangsdaten",
+            headers={"WWW-Authenticate": 'Basic realm="GBB Lernen privat"'},
+        )
+    return credentials.username
 
-tasks_db = [
-    {"id": 1, "title": "Jahresbericht einreichen (Müller)", "due_date": "2026-09-15", "status": "Pending"},
-    {"id": 2, "title": "Vergütungsantrag stellen (Schmidt)", "due_date": "2026-09-20", "status": "Pending"}
-]
 
-class RephraseRequest(BaseModel):
-    text: str
-    style: Optional[str] = "gericht"
+class QuizAnswer(BaseModel):
+    question_id: str
+    selected: int = Field(ge=0)
 
-class ClientModel(BaseModel):
-    first_name: str
-    last_name: str
-    case_number: str
-    court: Optional[str] = ""
+
+class QuizSubmit(BaseModel):
+    module_id: int
+    answers: List[QuizAnswer]
+
 
 @app.get("/api/health")
 def health_check():
-    return {"status": "online", "system": "BetreuerPlus Cloud", "time": datetime.datetime.now().isoformat()}
-
-@app.get("/api/clients")
-def get_clients():
-    return clients_db
-
-@app.post("/api/clients")
-def create_client(client: ClientModel):
-    new_client = client.dict()
-    new_client["id"] = len(clients_db) + 1
-    new_client["user_id"] = 1
-    clients_db.append(new_client)
-    return new_client
-
-@app.post("/api/ai/rephrase")
-def ai_rephrase(req: RephraseRequest):
-    raw_text = req.text.strip()
-    if not raw_text:
-        raise HTTPException(status_code=400, detail="Text darf nicht leer sein.")
-    
-    transformed_text = (
-        f"Sehr geehrte Damen und Herren,
-
-"
-        f"in der Betreuungssache nehme ich Bezug auf die Angelegenheit und teile dem Betreuungsgericht wie folgt mit:
-
-"
-        f"{raw_text}
-
-"
-        f"Ich bitte um entsprechende Kenntnisnahme und weitere Veranlassung.
-
-"
-        f"Mit freundlichen Grüßen
-"
-        f"Berufsbetreuer/in"
-    )
-    return {"original": raw_text, "rephrased": transformed_text}
-
-@app.post("/api/backup/export")
-def trigger_backup():
-    backup_data = {
-        "timestamp": datetime.datetime.now().isoformat(),
-        "clients": clients_db,
-        "tasks": tasks_db
-    }
-    json_str = json.dumps(backup_data)
-    encrypted_payload = fernet.encrypt(json_str.encode('utf-8'))
-    
+    # Ohne Login – nur für Hosting-Healthchecks
     return {
-        "status": "Erfolgreich",
-        "message": "Datenbank wurde mit AES-256 verschlüsselt gesichert.",
-        "encrypted_length_bytes": len(encrypted_payload)
+        "status": "online",
+        "system": "GBB Lernen",
+        "private": True,
+        "time": datetime.datetime.now().isoformat(),
     }
 
-# Serve PWA Single Page App for Mobile Safari
+
+@app.get("/api/meta")
+def meta(_: str = Depends(require_login)):
+    return progress_meta()
+
+
+@app.get("/api/modules")
+def list_modules(_: str = Depends(require_login)):
+    return [
+        {
+            "id": m["id"],
+            "title": m["title"],
+            "hours": m["hours"],
+            "area": m["area"],
+            "summary": m["summary"],
+            "topic_count": len(m["topics"]),
+            "lesson_count": len(m.get("lessons", [])),
+            "card_count": len(m["cards"]),
+            "quiz_count": len(m["quiz"]),
+            "legal_ref": m.get("legal_ref", ""),
+        }
+        for m in MODULES
+    ]
+
+
+@app.get("/api/modules/{module_id}")
+def module_detail(module_id: int, _: str = Depends(require_login)):
+    module = get_module(module_id)
+    if not module:
+        raise HTTPException(status_code=404, detail="Modul nicht gefunden.")
+    return module
+
+
+@app.get("/api/modules/{module_id}/quiz")
+def module_quiz(module_id: int, _: str = Depends(require_login)):
+    module = get_module(module_id)
+    if not module:
+        raise HTTPException(status_code=404, detail="Modul nicht gefunden.")
+    return {
+        "module_id": module_id,
+        "title": module["title"],
+        "questions": [
+            {
+                "id": q["id"],
+                "question": q["question"],
+                "options": q["options"],
+            }
+            for q in module["quiz"]
+        ],
+    }
+
+
+@app.post("/api/modules/{module_id}/quiz/submit")
+def submit_quiz(
+    module_id: int, payload: QuizSubmit, _: str = Depends(require_login)
+):
+    if payload.module_id != module_id:
+        raise HTTPException(status_code=400, detail="Modul-ID stimmt nicht überein.")
+    module = get_module(module_id)
+    if not module:
+        raise HTTPException(status_code=404, detail="Modul nicht gefunden.")
+
+    by_id = {q["id"]: q for q in module["quiz"]}
+    results = []
+    correct_count = 0
+
+    for answer in payload.answers:
+        question = by_id.get(answer.question_id)
+        if not question:
+            raise HTTPException(
+                status_code=400, detail=f"Unbekannte Frage: {answer.question_id}"
+            )
+        is_correct = answer.selected == question["correct"]
+        if is_correct:
+            correct_count += 1
+        results.append(
+            {
+                "question_id": answer.question_id,
+                "selected": answer.selected,
+                "correct_index": question["correct"],
+                "is_correct": is_correct,
+                "explain": question["explain"],
+            }
+        )
+
+    total = len(module["quiz"])
+    percent = round((correct_count / total) * 100) if total else 0
+    passed = percent >= 60
+
+    return {
+        "module_id": module_id,
+        "correct": correct_count,
+        "total": total,
+        "percent": percent,
+        "passed": passed,
+        "results": results,
+    }
+
+
 @app.get("/", response_class=HTMLResponse)
-def serve_index():
+def serve_index(_: str = Depends(require_login)):
     with open("static/index.html", "r", encoding="utf-8") as f:
         return f.read()
 
-# Serve static files (manifest, icons, app)
-app.mount("/static", StaticFiles(directory="static"), name="static")
+
+# StaticFiles hat kein Depends – eigener geschützter Proxy
+from fastapi import Request
+from fastapi.responses import FileResponse
+
+
+@app.get("/static/{file_path:path}")
+def protected_static(file_path: str, _: str = Depends(require_login)):
+    full = os.path.join("static", file_path)
+    if not os.path.isfile(full):
+        raise HTTPException(status_code=404, detail="Datei nicht gefunden.")
+    return FileResponse(full)
