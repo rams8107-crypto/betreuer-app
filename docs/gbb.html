@@ -1,0 +1,1059 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>GBB Lernen</title>
+  <meta name="theme-color" content="#0B1F1A" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-title" content="GBB Lernen" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,700;1,9..40,400&family=Fraunces:opsz,wght@9..144,500;9..144,700&display=swap" rel="stylesheet" />
+  <style>
+:root {
+  --ink: #0b1f1a;
+  --ink-2: #14352c;
+  --mist: #dce8e1;
+  --paper: #f3f7f4;
+  --gold: #c4a35a;
+  --gold-deep: #9a7a35;
+  --ok: #2f6f55;
+  --bad: #a33b32;
+  --muted: #5c7268;
+  --line: rgba(11, 31, 26, 0.12);
+  --shadow: 0 18px 40px rgba(11, 31, 26, 0.18);
+  --radius: 18px;
+  --font-display: "Fraunces", Georgia, serif;
+  --font-body: "DM Sans", sans-serif;
+  --safe-bottom: env(safe-area-inset-bottom, 0px);
+}
+
+* { box-sizing: border-box; }
+html, body { height: 100%; }
+body {
+  margin: 0;
+  font-family: var(--font-body);
+  color: var(--ink);
+  background: var(--paper);
+  -webkit-tap-highlight-color: transparent;
+  overscroll-behavior-y: none;
+}
+
+.atmosphere {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  background:
+    radial-gradient(1200px 600px at 10% -10%, rgba(196, 163, 90, 0.28), transparent 55%),
+    radial-gradient(900px 500px at 100% 0%, rgba(20, 53, 44, 0.35), transparent 50%),
+    linear-gradient(165deg, #eef5f0 0%, #d7e5dc 42%, #c9d9d0 100%);
+  animation: drift 18s ease-in-out infinite alternate;
+}
+
+@keyframes drift {
+  from { filter: hue-rotate(0deg) saturate(1); transform: scale(1); }
+  to { filter: hue-rotate(8deg) saturate(1.05); transform: scale(1.03); }
+}
+
+#app {
+  min-height: 100%;
+  padding: 0 0 calc(88px + var(--safe-bottom));
+}
+
+.screen {
+  animation: rise 420ms cubic-bezier(.2,.8,.2,1) both;
+}
+
+@keyframes rise {
+  from { opacity: 0; transform: translateY(14px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.hero {
+  min-height: 100dvh;
+  padding: 48px 24px calc(96px + var(--safe-bottom));
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  color: #f3f7f4;
+  background:
+    linear-gradient(180deg, rgba(11,31,26,0.25) 0%, rgba(11,31,26,0.92) 62%, #0b1f1a 100%),
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160' viewBox='0 0 160 160'%3E%3Cg fill='none' stroke='%23c4a35a' stroke-opacity='0.12'%3E%3Cpath d='M0 80h160M80 0v160'/%3E%3C/g%3E%3C/svg%3E"),
+    linear-gradient(135deg, #14352c, #0b1f1a 60%, #1a4034);
+  position: relative;
+  overflow: hidden;
+}
+
+.hero::after {
+  content: "";
+  position: absolute;
+  inset: auto -20% -30% 20%;
+  height: 55%;
+  background: radial-gradient(circle at 30% 30%, rgba(196,163,90,0.35), transparent 60%);
+  animation: glow 5.5s ease-in-out infinite alternate;
+  pointer-events: none;
+}
+
+@keyframes glow {
+  from { opacity: 0.55; transform: translateX(0); }
+  to { opacity: 1; transform: translateX(-18px); }
+}
+
+.brand {
+  font-family: var(--font-display);
+  font-size: clamp(3.2rem, 14vw, 4.6rem);
+  font-weight: 700;
+  letter-spacing: -0.045em;
+  line-height: 0.9;
+  margin: 0 0 18px;
+  position: relative;
+  z-index: 1;
+  color: #f7faf7;
+}
+
+.hero-line {
+  font-family: var(--font-display);
+  font-size: clamp(1.05rem, 3.8vw, 1.28rem);
+  font-weight: 500;
+  line-height: 1.3;
+  margin: 0 0 10px;
+  max-width: 24ch;
+  position: relative;
+  z-index: 1;
+  color: rgba(243, 247, 244, 0.88);
+}
+
+.hero-sub {
+  margin: 0 0 24px;
+  color: rgba(243, 247, 244, 0.78);
+  font-size: 0.98rem;
+  line-height: 1.45;
+  max-width: 32ch;
+  position: relative;
+  z-index: 1;
+}
+
+.after-hero {
+  padding-top: 28px;
+}
+
+.cta-row {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  position: relative;
+  z-index: 1;
+}
+
+.btn {
+  appearance: none;
+  border: 0;
+  border-radius: 999px;
+  padding: 14px 20px;
+  font: 700 0.95rem/1 var(--font-body);
+  cursor: pointer;
+  transition: transform 160ms ease, background 160ms ease, color 160ms ease;
+}
+.btn:active { transform: scale(0.98); }
+.btn-primary {
+  background: var(--gold);
+  color: var(--ink);
+}
+.btn-primary:hover { background: #d4b56a; }
+.btn-ghost {
+  background: rgba(243,247,244,0.1);
+  color: #f3f7f4;
+  border: 1px solid rgba(243,247,244,0.28);
+}
+.btn-ink {
+  background: var(--ink);
+  color: #f3f7f4;
+  width: 100%;
+}
+.btn-soft {
+  background: rgba(11,31,26,0.06);
+  color: var(--ink);
+}
+
+.panel {
+  padding: 22px 20px 8px;
+  max-width: 640px;
+  margin: 0 auto;
+}
+
+.section-title {
+  font-family: var(--font-display);
+  font-size: 1.45rem;
+  margin: 8px 0 6px;
+}
+.lede {
+  color: var(--muted);
+  margin: 0 0 18px;
+  line-height: 1.45;
+  font-size: 0.95rem;
+}
+
+.stat-line {
+  display: flex;
+  gap: 10px;
+  margin: 0 0 18px;
+  flex-wrap: wrap;
+}
+.stat {
+  flex: 1;
+  min-width: 96px;
+  padding: 12px 14px;
+  border-radius: 14px;
+  background: rgba(255,255,255,0.55);
+  border: 1px solid var(--line);
+}
+.stat strong {
+  display: block;
+  font-family: var(--font-display);
+  font-size: 1.35rem;
+}
+.stat span {
+  color: var(--muted);
+  font-size: 0.78rem;
+}
+
+.module-list {
+  display: grid;
+  gap: 10px;
+}
+
+.module-row {
+  width: 100%;
+  text-align: left;
+  border: 1px solid var(--line);
+  background: rgba(255,255,255,0.62);
+  border-radius: var(--radius);
+  padding: 14px 14px 14px 16px;
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  gap: 12px;
+  align-items: center;
+  cursor: pointer;
+  font: inherit;
+  color: inherit;
+  transition: transform 180ms ease, border-color 180ms ease, background 180ms ease;
+}
+.module-row:hover {
+  border-color: rgba(196,163,90,0.55);
+  background: rgba(255,255,255,0.86);
+}
+.module-row:active { transform: scale(0.995); }
+
+.mod-num {
+  width: 42px;
+  height: 42px;
+  border-radius: 12px;
+  display: grid;
+  place-items: center;
+  background: var(--ink);
+  color: var(--gold);
+  font-family: var(--font-display);
+  font-weight: 700;
+}
+.mod-body h3 {
+  margin: 0 0 4px;
+  font-size: 0.98rem;
+  line-height: 1.25;
+}
+.mod-body p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.8rem;
+}
+.mod-meta {
+  color: var(--muted);
+  font-size: 0.75rem;
+  text-align: right;
+}
+.badge {
+  display: inline-block;
+  margin-top: 6px;
+  padding: 3px 8px;
+  border-radius: 999px;
+  background: rgba(47,111,85,0.12);
+  color: var(--ok);
+  font-size: 0.7rem;
+  font-weight: 700;
+}
+.badge.warn {
+  background: rgba(196,163,90,0.2);
+  color: var(--gold-deep);
+}
+
+.topbar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 16px 16px 0;
+  max-width: 640px;
+  margin: 0 auto;
+}
+.back {
+  border: 0;
+  background: rgba(11,31,26,0.08);
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
+  font-size: 1.1rem;
+  cursor: pointer;
+}
+.topbar h2 {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: 1.15rem;
+  line-height: 1.2;
+}
+
+.topic-list, .card-stack {
+  display: grid;
+  gap: 10px;
+  margin: 14px 0 20px;
+}
+.topic, .learn-card {
+  background: rgba(255,255,255,0.7);
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  padding: 14px 16px;
+}
+.topic {
+  font-size: 0.92rem;
+  line-height: 1.4;
+}
+.learn-card strong {
+  display: block;
+  font-family: var(--font-display);
+  margin-bottom: 8px;
+  font-size: 1.02rem;
+}
+.learn-card p {
+  margin: 0;
+  color: var(--muted);
+  line-height: 1.45;
+  font-size: 0.92rem;
+}
+
+.quiz-progress {
+  height: 6px;
+  background: rgba(11,31,26,0.1);
+  border-radius: 999px;
+  overflow: hidden;
+  margin: 8px 0 18px;
+}
+.quiz-progress > i {
+  display: block;
+  height: 100%;
+  width: 0;
+  background: linear-gradient(90deg, var(--ink-2), var(--gold));
+  transition: width 280ms ease;
+}
+
+.q-text {
+  font-family: var(--font-display);
+  font-size: 1.25rem;
+  line-height: 1.3;
+  margin: 0 0 16px;
+}
+
+.options {
+  display: grid;
+  gap: 10px;
+}
+.option {
+  text-align: left;
+  border: 1px solid var(--line);
+  background: rgba(255,255,255,0.75);
+  border-radius: 14px;
+  padding: 14px 14px;
+  font: 500 0.95rem/1.35 var(--font-body);
+  cursor: pointer;
+  transition: border-color 150ms ease, background 150ms ease, transform 150ms ease;
+}
+.option.is-selected {
+  border-color: var(--gold-deep);
+  background: rgba(196,163,90,0.18);
+}
+.option.is-correct {
+  border-color: var(--ok);
+  background: rgba(47,111,85,0.14);
+}
+.option.is-wrong {
+  border-color: var(--bad);
+  background: rgba(163,59,50,0.12);
+}
+.option:disabled { cursor: default; }
+
+.explain {
+  margin-top: 14px;
+  padding: 12px 14px;
+  border-radius: 14px;
+  background: rgba(11,31,26,0.06);
+  color: var(--muted);
+  font-size: 0.9rem;
+  line-height: 1.4;
+  animation: rise 280ms ease both;
+}
+
+.result-hero {
+  text-align: center;
+  padding: 28px 16px 10px;
+}
+.result-hero .score {
+  font-family: var(--font-display);
+  font-size: 3rem;
+  margin: 8px 0;
+}
+.result-hero .pass { color: var(--ok); }
+.result-hero .fail { color: var(--bad); }
+
+.progress-bar {
+  height: 10px;
+  border-radius: 999px;
+  background: rgba(11,31,26,0.1);
+  overflow: hidden;
+  margin: 8px 0 4px;
+}
+.progress-bar > span {
+  display: block;
+  height: 100%;
+  background: linear-gradient(90deg, var(--ink-2), var(--gold));
+  transition: width 500ms cubic-bezier(.2,.8,.2,1);
+}
+
+.disclaimer {
+  margin: 18px 0 8px;
+  font-size: 0.78rem;
+  color: var(--muted);
+  line-height: 1.4;
+}
+
+.tabbar {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 4px;
+  padding: 8px 10px calc(8px + var(--safe-bottom));
+  background: rgba(243,247,244,0.88);
+  backdrop-filter: blur(14px);
+  border-top: 1px solid var(--line);
+  z-index: 40;
+}
+.tab {
+  border: 0;
+  background: transparent;
+  color: var(--muted);
+  display: grid;
+  gap: 2px;
+  justify-items: center;
+  padding: 8px 4px;
+  font: 600 0.7rem/1 var(--font-body);
+  cursor: pointer;
+}
+.tab-ico { font-size: 1.05rem; line-height: 1; }
+.tab.is-active { color: var(--ink); }
+
+.hidden { display: none !important; }
+
+@media (min-width: 720px) {
+  .hero { padding-left: max(24px, calc(50% - 320px)); padding-right: max(24px, calc(50% - 320px)); }
+}
+
+</style>
+  <style>
+    .gate {
+      min-height: 100dvh;
+      display: grid;
+      place-items: center;
+      padding: 24px;
+    }
+    .gate-box {
+      width: min(100%, 360px);
+      background: rgba(255,255,255,0.72);
+      border: 1px solid rgba(11,31,26,0.12);
+      border-radius: 18px;
+      padding: 28px 22px;
+      backdrop-filter: blur(10px);
+    }
+    .gate-box h1 {
+      font-family: "Fraunces", Georgia, serif;
+      font-size: 2rem;
+      margin: 0 0 8px;
+    }
+    .gate-box p {
+      color: #5c7268;
+      margin: 0 0 18px;
+      font-size: 0.95rem;
+      line-height: 1.4;
+    }
+    .gate-box label {
+      display: block;
+      font-size: 0.8rem;
+      font-weight: 700;
+      margin: 0 0 6px;
+    }
+    .gate-box input {
+      width: 100%;
+      border: 1px solid rgba(11,31,26,0.16);
+      border-radius: 12px;
+      padding: 12px 14px;
+      font: 500 1rem/1.2 "DM Sans", sans-serif;
+      margin-bottom: 12px;
+      background: #fff;
+    }
+    .gate-error {
+      color: #a33b32;
+      font-size: 0.85rem;
+      min-height: 1.2em;
+      margin: 0 0 8px;
+    }
+  </style>
+</head>
+<body>
+  <div class="atmosphere" aria-hidden="true"></div>
+  <div id="gate" class="gate">
+    <form class="gate-box" id="loginForm">
+      <h1>GBB Lernen</h1>
+      <p>Privater Zugang – bitte anmelden.</p>
+      <label for="user">Benutzer</label>
+      <input id="user" name="user" autocomplete="username" required />
+      <label for="pass">Passwort</label>
+      <input id="pass" name="pass" type="password" autocomplete="current-password" required />
+      <p class="gate-error" id="gateError"></p>
+      <button class="btn btn-ink" type="submit">Öffnen</button>
+    </form>
+  </div>
+  <div id="appShell" class="hidden">
+    <div id="app"></div>
+    <nav class="tabbar" id="tabbar" aria-label="Hauptnavigation">
+      <button type="button" data-route="home" class="tab is-active">
+        <span class="tab-ico" aria-hidden="true">⌂</span>
+        <span>Start</span>
+      </button>
+      <button type="button" data-route="modules" class="tab">
+        <span class="tab-ico" aria-hidden="true">☰</span>
+        <span>Module</span>
+      </button>
+      <button type="button" data-route="progress" class="tab">
+        <span class="tab-ico" aria-hidden="true">◎</span>
+        <span>Fortschritt</span>
+      </button>
+    </nav>
+  </div>
+  <script>
+(() => {
+  const STORAGE_KEY = "gbb-lernen-progress-v1";
+  const AUTH_KEY = "gbb-lernen-auth-v1";
+  const EXPECTED_USER = "ramazan";
+  const EXPECTED_PASS = "GBBprivat26";
+
+  const gate = document.getElementById("gate");
+  const appShell = document.getElementById("appShell");
+  const app = document.getElementById("app");
+  const tabbar = document.getElementById("tabbar");
+  const loginForm = document.getElementById("loginForm");
+  const gateError = document.getElementById("gateError");
+
+  const state = {
+    route: "home",
+    modules: [],
+    meta: null,
+    module: null,
+    quiz: null,
+    quizIndex: 0,
+    selections: {},
+    review: null,
+    loading: true,
+    error: null,
+  };
+
+  function isAuthed() {
+    try {
+      return sessionStorage.getItem(AUTH_KEY) === "ok";
+    } catch {
+      return false;
+    }
+  }
+
+  function setAuthed() {
+    sessionStorage.setItem(AUTH_KEY, "ok");
+  }
+
+  function loadProgress() {
+    try {
+      return JSON.parse(localStorage.getItem(STORAGE_KEY) || "{}");
+    } catch {
+      return {};
+    }
+  }
+
+  function saveProgress(data) {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+  }
+
+  function moduleProgress(id) {
+    const p = loadProgress()[String(id)] || {};
+    return {
+      cardsDone: !!p.cardsDone,
+      bestPercent: p.bestPercent || 0,
+      passed: !!p.passed,
+      attempts: p.attempts || 0,
+    };
+  }
+
+  function markCardsDone(id) {
+    const all = loadProgress();
+    const cur = all[String(id)] || {};
+    cur.cardsDone = true;
+    all[String(id)] = cur;
+    saveProgress(all);
+  }
+
+  function markQuizResult(id, percent, passed) {
+    const all = loadProgress();
+    const cur = all[String(id)] || {};
+    cur.attempts = (cur.attempts || 0) + 1;
+    cur.bestPercent = Math.max(cur.bestPercent || 0, percent);
+    cur.passed = cur.passed || passed;
+    all[String(id)] = cur;
+    saveProgress(all);
+  }
+
+  function overallProgress() {
+    if (!state.modules.length) return { done: 0, total: 0, percent: 0 };
+    const total = state.modules.length;
+    const done = state.modules.filter((m) => moduleProgress(m.id).passed).length;
+    return { done, total, percent: Math.round((done / total) * 100) };
+  }
+
+  function continueModuleId() {
+    const unfinished = state.modules.find((m) => !moduleProgress(m.id).passed);
+    return unfinished ? unfinished.id : state.modules[0]?.id || 1;
+  }
+
+  function getFullModule(id) {
+    return state.fullModules.find((m) => m.id === id) || null;
+  }
+
+  function listSummary() {
+    return state.fullModules.map((m) => ({
+      id: m.id,
+      title: m.title,
+      hours: m.hours,
+      area: m.area,
+      summary: m.summary,
+      topic_count: m.topics.length,
+      card_count: m.cards.length,
+      quiz_count: m.quiz.length,
+    }));
+  }
+
+  async function boot() {
+    try {
+      const data = {"meta": {"module_count": 11, "total_hours": 270, "total_questions": 55, "disclaimer": "Lernhilfe zur Vorbereitung und Wiederholung. Kein anerkannter Sachkundelehrgang nach BtRegV § 6."}, "modules": [{"id": 1, "title": "Betreuerbestellung und Zusammenarbeit mit dem Betreuungsgericht", "hours": 15, "area": "Rechtliche Grundlagen", "summary": "Voraussetzungen der Bestellung, Einwilligungsvorbehalt und Pflichten gegenüber Gericht und betreuter Person.", "topics": ["Voraussetzungen der Betreuerbestellung (§§ 1814 ff. BGB)", "Einwilligungsvorbehalt: Voraussetzungen und Wirkung", "Aufgabenkreis und Erforderlichkeitsgrundsatz", "Berichtspflichten und Genehmigungsvorbehalte", "Zusammenarbeit mit Betreuungsgericht und Betreuungsbehörde"], "cards": [{"q": "Wann darf eine Betreuung angeordnet werden?", "a": "Wenn ein volljähriger Mensch aufgrund von Krankheit oder Behinderung seine Angelegenheiten ganz oder teilweise nicht besorgen kann und keine milderen Mittel (z. B. Vorsorgevollmacht) ausreichen."}, {"q": "Was bewirkt ein Einwilligungsvorbehalt?", "a": "Für bestimmte Willenserklärungen der betreuten Person ist die Einwilligung des Betreuers erforderlich; ohne sie sind die Erklärungen in der Regel schwebend unwirksam."}, {"q": "Was bedeutet der Erforderlichkeitsgrundsatz?", "a": "Betreuung und Aufgabenkreis dürfen nur so weit gehen, wie nötig. Wo die Person selbst oder mit Unterstützung handeln kann, entfällt Betreuung."}], "quiz": [{"id": "1-1", "question": "Wofür steht der Erforderlichkeitsgrundsatz in der rechtlichen Betreuung?", "options": ["Betreuung so umfassend wie möglich", "Betreuung nur soweit nötig und so wenig eingreifend wie möglich", "Immer Einwilligungsvorbehalt anordnen", "Nur Vermögenssorge erlaubt"], "correct": 1, "explain": "§ 1814 BGB / Betreuungsrecht: mildestes wirksames Mittel und begrenzter Aufgabenkreis."}, {"id": "1-2", "question": "Ein Einwilligungsvorbehalt bedeutet vor allem:", "options": ["Der Betreuer entscheidet allein ohne Rücksicht auf Wünsche", "Bestimmte Geschäfte der betreuten Person brauchen die Einwilligung des Betreuers", "Das Gericht führt die Betreuung selbst", "Die Betreuung endet automatisch nach einem Jahr"], "correct": 1, "explain": "Schutz vor nachteiligen Rechtsgeschäften bei fehlender Geschäftsfähigkeit in Teilbereichen."}, {"id": "1-3", "question": "An wen richtet sich die Berichtspflicht des beruflichen Betreuers?", "options": ["Nur an die Krankenkasse", "An das Betreuungsgericht (und in der Praxis oft abgestimmt mit der Behörde)", "Nur an Angehörige", "Nur an den Vermieter"], "correct": 1, "explain": "Das Gericht überwacht die Betreuung; Berichte und Rechnungslegung sind zentral."}, {"id": "1-4", "question": "Eine Vorsorgevollmacht ist gegenüber einer Betreuung in der Regel:", "options": ["Immer unwirksam", "Ein milderes Mittel, das eine Betreuung oft entbehrlich macht", "Nur für Minderjährige gedacht", "Nur für Sozialleistungen gültig"], "correct": 1, "explain": "Bestehende wirksame Vorsorge kann Bestellung verhindern oder einschränken."}, {"id": "1-5", "question": "Wer registriert berufliche Betreuerinnen und Betreuer?", "options": ["Das Finanzamt", "Die Stammbehörde (Betreuungsbehörde)", "Die Krankenkasse", "Das Jobcenter allein"], "correct": 1, "explain": "BtOG / BtRegV: Registrierung bei der zuständigen Betreuungsbehörde."}]}, {"id": 2, "title": "Betreuungsführung", "hours": 30, "area": "Rechtliche Grundlagen", "summary": "Pflichten aus § 1821 BGB, Wunsch- und Wille-Orientierung, Vertretung und Grenzen der Entscheidungsbefugnis.", "topics": ["Wünsche, mutmaßlicher Wille und Wohl der betreuten Person", "Persönliche Betreuung und Kontakthäufigkeit", "Vertretungsmacht und Innenverhältnis", "Haftungsgrundlagen und Sorgfaltspflichten", "Dokumentation der Betreuungsführung"], "cards": [{"q": "Wonach richtet sich die Betreuungsführung vorrangig?", "a": "Nach den Wünschen der betreuten Person; hilfsweise nach dem mutmaßlichen Willen. Das objektive „Wohl“ allein ersetzt nicht den Willen."}, {"q": "Was bedeutet persönliche Betreuung?", "a": "Der Betreuer muss die Betreuung grundsätzlich persönlich führen, Kontakt halten und darf Aufgaben nur begrenzt und verantwortbar übertragen."}], "quiz": [{"id": "2-1", "question": "Vorrang bei der Entscheidungsfindung hat:", "options": ["Der Wille der Angehörigen", "Der Wunsch bzw. mutmaßliche Wille der betreuten Person", "Immer die kostengünstigste Lösung", "Die Meinung der Nachbarn"], "correct": 1, "explain": "§ 1821 BGB: Wunsch- und Wille-Orientierung steht im Zentrum."}, {"id": "2-2", "question": "Persönliche Betreuung bedeutet vor allem:", "options": ["Alles an Dritte outsourcen", "Regelmäßiger persönlicher Kontakt und eigene Verantwortung", "Nur schriftliche Kommunikation", "Nur einmal jährlich Besuch"], "correct": 1, "explain": "Persönliche Wahrnehmung ist Kernpflicht beruflicher Betreuung."}, {"id": "2-3", "question": "Dokumentation in der Betreuung dient vor allem:", "options": ["Nur der Werbung", "Nachweisbarkeit, Qualität und gerichtlicher Kontrolle", "Der Steuerhinterziehung", "Dem Ersatz von Berichten"], "correct": 1, "explain": "Nachvollziehbare Aktenführung schützt betreute Person und Betreuer."}, {"id": "2-4", "question": "Der Betreuer handelt im Außenverhältnis typischerweise als:", "options": ["Zeuge", "Gesetzlicher Vertreter im zugewiesenen Aufgabenkreis", "Richter", "Sozialarbeiter ohne Vertretungsmacht"], "correct": 1, "explain": "Im Aufgabenkreis vertritt der Betreuer die betreute Person."}, {"id": "2-5", "question": "Widerspricht ein aktueller Wille einer alten Patientenverfügung, gilt in der Regel:", "options": ["Immer nur die alte Verfügung", "Der aktuelle, frei gebildete Wille hat Vorrang, soweit erkennbar", "Nur Arztentscheidung zählt", "Immer Gerichtsgutachten ohne Gespräch"], "correct": 1, "explain": "Aktueller Wille und Auslegung der Verfügung sind sorgfältig zu prüfen."}]}, {"id": 3, "title": "Recht der Unterbringung und der ärztlichen Zwangsmaßnahmen", "hours": 15, "area": "Rechtliche Grundlagen", "summary": "Freiheitsentzug, Fixierung, Zwangsbehandlung: Voraussetzungen, Verfahren und Aufgaben des Betreuers.", "topics": ["Freiheitsentziehende Unterbringung nach Betreuungsrecht", "Sonstige freiheitsentziehende Maßnahmen", "Ärztliche Zwangsmaßnahmen: Voraussetzungen", "Gerichtliche Genehmigung und Verfahren", "Aufgaben während des Vollzugs"], "cards": [{"q": "Wann kommt eine freiheitsentziehende Unterbringung in Betracht?", "a": "Nur bei erheblicher Selbstgefährdung (oder in engen gesetzlichen Fällen) und wenn mildere Mittel nicht ausreichen; gerichtliche Genehmigung ist erforderlich."}, {"q": "Was gilt für ärztliche Zwangsmaßnahmen?", "a": "Hohe Hürden: u. a. Einwilligungsunfähigkeit, drohender erheblicher Gesundheitsschaden, Ultima Ratio, richterliche Genehmigung und begleitende Pflichten."}], "quiz": [{"id": "3-1", "question": "Freiheitsentziehende Unterbringung nach Betreuungsrecht bedarf in der Regel:", "options": ["Nur einer ärztlichen Empfehlung", "Gerichtlicher Genehmigung", "Nur Zustimmung der Angehörigen", "Nur Krankenkassenbewilligung"], "correct": 1, "explain": "Richtervorbehalt schützt die Freiheit der Person."}, {"id": "3-2", "question": "Ärztliche Zwangsmaßnahmen sind:", "options": ["Alltag in jeder Betreuung", "Ultima Ratio mit strengen gesetzlichen Voraussetzungen", "Immer ohne Genehmigung erlaubt", "Nur Sache des Betreuers allein"], "correct": 1, "explain": "Hohes Schutzgut: körperliche Unversehrtheit und Selbstbestimmung."}, {"id": "3-3", "question": "Eine Fixierung als freiheitsentziehende Maßnahme:", "options": ["Braucht nie richterliche Kontrolle", "Kann ebenfalls genehmigungspflichtig sein", "Ist immer unzulässig", "Ersetzt die Betreuung"], "correct": 1, "explain": "Auch FEM unterliegen strengen Voraussetzungen und Verfahren."}, {"id": "3-4", "question": "Während einer Unterbringung soll der Betreuer vor allem:", "options": ["Kontakt abbrechen", "Interessen wahren, Milderungen prüfen und Verfahren begleiten", "Nur Kosten prüfen", "Die Klinik leiten"], "correct": 1, "explain": "Begleitung, Kontrolle der Erforderlichkeit und Wille der Person bleiben zentral."}, {"id": "3-5", "question": "Mildere Mittel vor Unterbringung können sein:", "options": ["Ambulante Hilfen, Krisenintervention, Wohnanpassung", "Sofortige Dauerfixierung", "Vertragsstrafe", "Entzug des Wahlrechts"], "correct": 0, "explain": "Erforderlichkeit verlangt Prüfung weniger eingreifender Alternativen."}]}, {"id": 4, "title": "Personensorge 1", "hours": 15, "area": "Personensorge", "summary": "Krankheitsbilder, Behinderungen und Strategien zur Vermeidung von Freiheitsentzug.", "topics": ["Typische betreuungsrelevante Erkrankungen und Behinderungen", "Auswirkungen auf Alltag und Entscheidungsfähigkeit", "Behandlungsmöglichkeiten und Risiken", "Vermeidung von Unterbringung und Zwangsmaßnahmen", "Ressourcen- und Teilhabeorientierung"], "cards": [{"q": "Warum sind Grundkenntnisse zu Erkrankungen wichtig?", "a": "Um Auswirkungen auf Willensbildung und Alltag zu verstehen, ohne zu pathologisieren – und um passende Hilfen statt Zwang zu finden."}], "quiz": [{"id": "4-1", "question": "Ziel von Personensorge-Kenntnissen ist vor allem:", "options": ["Diagnosen stellen wie ein Arzt", "Auswirkungen verstehen und passende Unterstützung finden", "Medikamente verschreiben", "Therapie ersetzen"], "correct": 1, "explain": "Betreuer diagnostizieren nicht, brauchen aber Orientierungswissen."}, {"id": "4-2", "question": "Vermeidung von Freiheitsentzug gelingt oft durch:", "options": ["Frühe Krisenplanung, Netzwerke, ambulante Hilfen", "Sofortige Zwangsmedikation", "Kontaktverbot zu allen Helfern", "Ignorieren von Warnzeichen"], "correct": 0, "explain": "Prävention und milde Mittel stehen vor Zwang."}, {"id": "4-3", "question": "Eine Demenz kann Entscheidungsfähigkeit:", "options": ["Immer vollständig aufheben", "Bereichsweise und zeitweise beeinträchtigen", "Nie betreuungsrelevant sein", "Nur das Mietrecht betreffen"], "correct": 1, "explain": "Einwilligungsfähigkeit ist situativ und bereichsspezifisch zu prüfen."}, {"id": "4-4", "question": "Behinderung im Sinne der UN-BRK betont:", "options": ["Nur Defizite", "Teilhabe und Wechselwirkung mit Barrieren", "Ausschluss aus der Gesellschaft", "Nur medizinische Heilung"], "correct": 1, "explain": "Menschenrechts- und Teilhabeperspektive prägen moderne Betreuung."}, {"id": "4-5", "question": "Bei Suchtproblemen ist oft zentral:", "options": ["Nur Bestrafung", "Zugang zu Behandlung, Wohnstabilität und unterstützter Entscheidung", "Sofortige Entmündigung ohne Gespräch", "Kontosperre ohne Aufgabenkreis"], "correct": 1, "explain": "Hilfen und Wille der Person stehen im Vordergrund."}]}, {"id": 5, "title": "Personensorge 2", "hours": 15, "area": "Personensorge", "summary": "Behandlungsvertrag, Einwilligungsfähigkeit, Patientenrechte, Wohnraum und Aufenthalt.", "topics": ["Behandlungsvertragsrecht und Patientenrechte", "Einwilligungsfähigkeit", "Patientenverfügung und Behandlungswünsche", "Gefährliche Maßnahmen und Genehmigungen", "Wohnraumaufgabe, Umgang und Aufenthalt"], "cards": [{"q": "Was ist Einwilligungsfähigkeit?", "a": "Die Fähigkeit, Wesen, Bedeutung und Tragweite einer konkreten Maßnahme zu verstehen und einen Willen danach zu bilden – situationsbezogen."}, {"q": "Was gilt für die Aufgabe der Wohnung?", "a": "Oft genehmigungspflichtig und besonders eingreifend; Wille, Alternativen und soziale Bezüge sind sorgfältig zu prüfen."}], "quiz": [{"id": "5-1", "question": "Einwilligungsfähigkeit bezieht sich auf:", "options": ["Eine pauschale Lebensentscheidung für immer", "Die konkrete Maßnahme und Situation", "Nur das Alter", "Nur das Vermögen"], "correct": 1, "explain": "Sie ist nicht global „vorhanden/nicht vorhanden“."}, {"id": "5-2", "question": "Eine Patientenverfügung:", "options": ["Ist immer unverbindlich", "Kann für konkrete Behandlungssituationen verbindlich sein", "Ersetzt jede Betreuung", "Gilt nur für Minderjährige"], "correct": 1, "explain": "Bei Passung der Situation ist sie bindend auszulegen und umzusetzen."}, {"id": "5-3", "question": "Aufgabe von Wohnraum durch den Betreuer:", "options": ["Ist immer formlos möglich", "Ist oft genehmigungspflichtig und besonders eingreifend", "Braucht nie den Willen der Person", "Ist Sache der Polizei"], "correct": 1, "explain": "Wohnung ist zentrales Lebensgut; Verfahren und Wille beachten."}, {"id": "5-4", "question": "Patientenrechte umfassen unter anderem:", "options": ["Aufklärung, Einwilligung, Einsicht in Unterlagen", "Nur Kostenübernahme", "Nur Klinikhausordnung", "Verzicht auf Information"], "correct": 0, "explain": "Selbstbestimmung und Informationsrechte sind zentral."}, {"id": "5-5", "question": "Bei gefährlichen ärztlichen Maßnahmen braucht es oft:", "options": ["Nur Nachbarzustimmung", "Sorgfältige Prüfung und ggf. gerichtliche Genehmigung", "Gar keine Prüfung", "Nur Online-Formular ohne Arzt"], "correct": 1, "explain": "Je höher das Risiko, desto strenger Verfahren und Dokumentation."}]}, {"id": 6, "title": "Vermögenssorge 1", "hours": 15, "area": "Vermögenssorge", "summary": "Geschäftsfähigkeit, Stellvertretung, Schuldrecht, Haftung, Zwangsvollstreckung und Insolvenzgrundlagen.", "topics": ["Geschäftsfähigkeit und Willenserklärungen", "Recht der Stellvertretung", "Schuldrecht und Haftungsfragen", "Zwangsvollstreckung im Überblick", "Insolvenzverfahren – Grundkenntnisse"], "cards": [{"q": "Was muss der Betreuer bei Verträgen prüfen?", "a": "Ob die betreute Person selbst wirksam handeln kann, ob Vertretung nötig ist und ob Genehmigungen oder Einwilligungsvorbehalt greifen."}], "quiz": [{"id": "6-1", "question": "Geschäftsunfähigkeit bedeutet grob:", "options": ["Man darf wählen, aber nicht mieten", "Willenserklärungen sind in der Regel nichtig", "Man ist automatisch betreut", "Nur Ausländer sind betroffen"], "correct": 1, "explain": "§§ 104 ff. BGB – mit wichtigen Ausnahmen und Nuancen."}, {"id": "6-2", "question": "Stellvertretung durch den Betreuer wirkt:", "options": ["Nur intern ohne Außenwirkung", "Im Außenverhältnis für die betreute Person im Aufgabenkreis", "Nur gegenüber dem Gericht", "Nie bei Mietverträgen"], "correct": 1, "explain": "Vertretungsmacht folgt dem Aufgabenkreis."}, {"id": "6-3", "question": "Bei drohender Zahlungsunfähigkeit sollte der Betreuer:", "options": ["Schulden ignorieren", "Überblick schaffen, Fristen wahren und geeignete Verfahren prüfen", "Sofort alles bar abheben ohne Dokumentation", "Nur das Gericht anrufen ohne Zahlen"], "correct": 1, "explain": "Vermögenssorge verlangt aktive Sicherung und Ordnung der Finanzen."}, {"id": "6-4", "question": "Haftungsrisiken entstehen besonders bei:", "options": ["Sorgfältiger Dokumentation", "Pflichtverletzung und fehlender Sorgfalt", "Regelmäßigen Berichten", "Wunschermittlung"], "correct": 1, "explain": "Sorgfaltspflichten und Grenzen der Vertretung beachten."}, {"id": "6-5", "question": "Zwangsvollstreckung betrifft oft:", "options": ["Nur Strafrecht", "Durchsetzung von Geldforderungen in Vermögen/Einkommen", "Nur Sozialhilfe", "Nur Erbschaftsteuer"], "correct": 1, "explain": "Pfändungsschutz und Verfahrenskenntnisse sind praxisrelevant."}]}, {"id": 7, "title": "Vermögenssorge 2", "hours": 15, "area": "Vermögenssorge", "summary": "Vermögensverzeichnis, Rechnungslegung, Genehmigungen, Miet-/Heimrecht sowie Erb- und Familienrecht.", "topics": ["Vermögensverzeichnis und Rechnungslegung", "Genehmigungsvorbehalte bei Vermögensgeschäften", "Miet- und Heimrecht in der Betreuung", "Erb- und familienrechtliche Bezüge", "Geldanlage und Verfügungen über Vermögen"], "cards": [{"q": "Wozu dient das Vermögensverzeichnis?", "a": "Zur Transparenz gegenüber dem Gericht: Ausgangslage des Vermögens zu Beginn der Betreuung."}, {"q": "Was ist bei Heimverträgen wichtig?", "a": "Verbraucherschutz, Leistungen, Kosten, Kündigung und das Zusammenspiel mit Sozialleistungen und Wunsch der Person."}], "quiz": [{"id": "7-1", "question": "Das Vermögensverzeichnis wird typischerweise erstellt:", "options": ["Am Ende der Betreuung ohne Anlass", "Zu Beginn der Vermögenssorge für das Gericht", "Nur bei Umzug", "Nur auf Wunsch der Bank"], "correct": 1, "explain": "Ausgangsbestand macht spätere Kontrolle möglich."}, {"id": "7-2", "question": "Rechnungslegung dient:", "options": ["Der gerichtlichen Kontrolle der Vermögensverwaltung", "Nur interner Buchhaltung ohne Pflicht", "Der Steuerberatung der Nachbarn", "Dem Ersatz der Betreuung"], "correct": 0, "explain": "Einnahmen/Ausgaben nachvollziehbar belegen."}, {"id": "7-3", "question": "Viele riskante Vermögensgeschäfte sind:", "options": ["Immer frei", "Genehmigungspflichtig durch das Betreuungsgericht", "Nur notariell ohne Gericht", "Verboten ohne Ausnahme"], "correct": 1, "explain": "Schutz vor Vermögensschäden durch Vorbehalt."}, {"id": "7-4", "question": "Im Mietrecht der betreuten Person ist oft zentral:", "options": ["Erhalt der Wohnung und Prüfung von Kündigungen", "Sofortige Kündigung ohne Gespräch", "Nur Schönheitsreparaturen", "Nur Kaution der Nachbarn"], "correct": 0, "explain": "Wohnraumschutz und soziale Bezüge haben hohen Stellenwert."}, {"id": "7-5", "question": "Erbschaftsangelegenheiten in der Betreuung:", "options": ["Sind nie relevant", "Können Annahme/Ausschlagung und Genehmigungen betreffen", "Erledigt immer das Finanzamt allein", "Brauchen keine Fristenkenntnis"], "correct": 1, "explain": "Fristen und Vermögensfolgen sorgfältig prüfen."}]}, {"id": 8, "title": "Sozialrecht 1: Kenntnisse des Sozialrechts", "hours": 30, "area": "Sozialrecht", "summary": "Leistungen zur Existenzsicherung, Kranken-/Renten-/Pflegeversicherung und Durchsetzung von Ansprüchen.", "topics": ["SGB II und SGB XII: Lebensunterhalt und KdU", "Leistungen nach SGB V, VI und XI", "Mitwirkungspflichten", "Ermittlung und Durchsetzung von Ansprüchen", "Widerspruch und Klage im Sozialrecht"], "cards": [{"q": "Unterschied SGB II / SGB XII?", "a": "SGB II (Bürgergeld) für erwerbsfähige Leistungsberechtigte; SGB XII u. a. Hilfe zum Lebensunterhalt / Grundsicherung bei Erwerbsminderung bzw. Alter."}, {"q": "Was sind Mitwirkungspflichten?", "a": "Pflichten, an der Aufklärung mitzuwirken (Angaben, Nachweise). Verletzung kann Leistungskürzung drohen – Aufklärung und Begleitung sind wichtig."}], "quiz": [{"id": "8-1", "question": "SGB II regelt vor allem:", "options": ["Bürgergeld für erwerbsfähige Leistungsberechtigte", "Nur Pflegeheimkosten", "Nur Kindergeld", "Nur Beamtenversorgung"], "correct": 0, "explain": "Zentrale Existenzsicherungsnorm für erwerbsfähige Personen."}, {"id": "8-2", "question": "SGB XII ist u. a. relevant bei:", "options": ["Nur Arbeitslosengeld I", "Grundsicherung im Alter und bei Erwerbsminderung / Hilfe zum Lebensunterhalt", "Nur Kfz-Steuer", "Nur Elterngeld"], "correct": 1, "explain": "Häufig in Betreuungen mit längerfristiger Erwerbsminderung."}, {"id": "8-3", "question": "SGB XI betrifft:", "options": ["Pflegeversicherung", "Nur Rentenversicherung", "Nur Unfallversicherung", "Nur Asylbewerberleistungen"], "correct": 0, "explain": "Pflegegrade, Sach- und Geldleistungen."}, {"id": "8-4", "question": "Bei Ablehnung eines Sozialantrags hilft oft zuerst:", "options": ["Widerspruch innerhalb der Frist", "Sofort Bundesverfassungsgericht", "Nur Facebook-Post", "Ignorieren der Frist"], "correct": 0, "explain": "Fristenwahrung ist entscheidend; danach ggf. Klage."}, {"id": "8-5", "question": "Kosten der Unterkunft (KdU) sind typischerweise:", "options": ["Teil der Existenzsicherung nach SGB II/XII", "Immer Privatsache ohne Leistung", "Nur BAföG", "Nur Kindergeld"], "correct": 0, "explain": "Angemessenheit und Nachweise sind praxisrelevant."}]}, {"id": 9, "title": "Sozialrecht 2: Sozial- und Hilfestrukturen in der Praxis", "hours": 45, "area": "Sozialrecht", "summary": "Teilhabe (SGB IX), Pflege im Leistungskombi und Netzwerkarbeit vor Ort.", "topics": ["Rehabilitation und Teilhabe (SGB IX)", "Eingliederungshilfe und Leistungsformen", "Pflegeleistungen in Kombination mit anderen Leistungen", "Fallbezogene Erschließung von Hilfen", "Netzwerke, Beratungsstellen, Träger"], "cards": [{"q": "Was ist Eingliederungshilfe?", "a": "Leistungen zur Teilhabe für Menschen mit Behinderung (u. a. soziale Teilhabe, Bildung, Arbeit) – Träger und Verfahren nach SGB IX kennen."}, {"q": "Warum Netzwerke?", "a": "Betreuung wirkt über Anspruchserschließung: wer hilft wofür vor Ort (Pflege, Teilhabe, Schuldnerberatung, Wohnen)."}], "quiz": [{"id": "9-1", "question": "SGB IX steht zentral für:", "options": ["Rehabilitation und Teilhabe von Menschen mit Behinderungen", "Nur Strafvollzug", "Nur Steuerrecht", "Nur Beamtenrecht"], "correct": 0, "explain": "Teilhabeleistungen und Verfahren der Rehabilitationsträger."}, {"id": "9-2", "question": "Eingliederungshilfe kann umfassen:", "options": ["Teilhabe am Arbeitsleben, Bildung, soziale Teilhabe", "Nur Bußgelder", "Nur Kfz-Zulassung", "Nur Erbrecht"], "correct": 0, "explain": "Leistungsformen sind vielfältig und einzelfallbezogen."}, {"id": "9-3", "question": "Pflege und Eingliederungshilfe:", "options": ["Schließen sich immer aus", "Können zusammentreffen und müssen abgegrenzt/kombiniert werden", "Sind identisch", "Betrifft nur Kinder"], "correct": 1, "explain": "Schnittstellenkenntnis ist prüfungs- und praxisrelevant."}, {"id": "9-4", "question": "Fallbezogene Erschließung von Hilfen heißt:", "options": ["Bedarf klären und passende Träger/Leistungen finden", "Immer denselben Standardbrief senden", "Nur Google ohne Antrag", "Nur Gericht anrufen"], "correct": 0, "explain": "Methodisches Vorgehen statt Zufall."}, {"id": "9-5", "question": "Ein gutes regionales Netzwerk enthält oft:", "options": ["Betreuungsverein, Pflegestützpunkt, Sozialpsychiatrie, Schuldnerberatung", "Nur Fitnessstudios", "Nur Autohäuser", "Nur Auslandsbanken"], "correct": 0, "explain": "Praxiswissen über Akteure vor Ort."}]}, {"id": 10, "title": "Grundlagen der Kommunikation und Praxistransfer", "hours": 30, "area": "Kommunikation", "summary": "Kommunikationsmodelle, Haltung, Diversität, Konflikte und Selbstreflexion.", "topics": ["Theoretische Konzepte und Methoden", "Grundhaltungen und Gesprächstechniken", "Diversitätssensible Kommunikation", "Ressourcenorientierung", "Konfliktmanagement und Machtreflexion"], "cards": [{"q": "Welche Haltung ist zentral?", "a": "Respekt, Empathie, Klarheit und Verzicht auf Bevormundung – bei gleichzeitiger Verantwortung im Aufgabenkreis."}], "quiz": [{"id": "10-1", "question": "Ressourcenorientierte Kommunikation betont:", "options": ["Nur Defizite", "Stärken, Fähigkeiten und vorhandene Netze", "Nur Diagnosen", "Nur Gerichtssprache"], "correct": 1, "explain": "Anschlussfähig für unterstützte Entscheidungsfindung."}, {"id": "10-2", "question": "Diversitätssensible Kommunikation heißt u. a.:", "options": ["Sprache, Kultur, Beeinträchtigung und Biografie beachten", "Alle gleich behandeln ohne Anpassung", "Nur Hochdeutsch ohne Hilfsmittel", "Nur schriftlich kommunizieren"], "correct": 0, "explain": "Zugänglichkeit und Respekt vor Unterschieden."}, {"id": "10-3", "question": "Machtreflexion in der Betreuung ist wichtig, weil:", "options": ["Betreuer strukturell Macht haben und sie kontrollieren müssen", "Es keine Machtasymmetrie gibt", "Nur Gerichte Macht haben", "Macht irrelevant ist"], "correct": 0, "explain": "Bewusste Begrenzung von Bevormundung."}, {"id": "10-4", "question": "Im Konflikt hilft oft:", "options": ["Aktives Zuhören, Klärung von Interessen, klare Grenzen", "Sofortiger Abbruch ohne Gespräch", "Nur Drohungen", "Ignorieren aller Emotionen"], "correct": 0, "explain": "Konfliktfähigkeit ist Kernkompetenz."}, {"id": "10-5", "question": "Praxistransfer bedeutet:", "options": ["Theorie in konkrete Gesprächs- und Fallarbeit übersetzen", "Nur auswendig lernen", "Nur Paragraphen zitieren", "Theorie vermeiden"], "correct": 0, "explain": "Module 10/11 sind übungsstark angelegt."}]}, {"id": 11, "title": "Betreuungsspezifische Kommunikation / Unterstützte Entscheidungsfindung", "hours": 45, "area": "Kommunikation", "summary": "Unterstützte Entscheidungsfindung, Willenserkundung und Methoden der Begleitung.", "topics": ["Unterstützte Entscheidungsfindung statt Ersatzentscheidung", "Erkennen von Wünschen und Präferenzen", "Methoden der Unterstützung bei Entscheidungen", "Umgang mit Uneinigkeit und Risikolagen", "Dokumentation von Willensermittlung"], "cards": [{"q": "Was ist unterstützte Entscheidungsfindung?", "a": "Die Person soll möglichst selbst entscheiden; der Betreuer hilft beim Verstehen und Abwägen, statt vorschnell zu ersetzen."}, {"q": "Wann Ersatzentscheidung?", "a": "Nur wenn trotz Unterstützung keine eigene Entscheidung möglich ist – dann am mutmaßlichen Willen orientiert."}], "quiz": [{"id": "11-1", "question": "Unterstützte Entscheidungsfindung bedeutet:", "options": ["Möglichst eigene Entscheidung der Person ermöglichen", "Immer allein entscheiden", "Nur Angehörige entscheiden lassen", "Nie erklären, nur anordnen"], "correct": 0, "explain": "Paradigmenwechsel im modernen Betreuungsrecht."}, {"id": "11-2", "question": "Ersatzentscheidungen sind:", "options": ["Erste Wahl", "Nachrangig, wenn Unterstützung nicht ausreicht", "Verboten", "Nur bei Mietrecht erlaubt"], "correct": 1, "explain": "Unterstützung vor Ersetzung."}, {"id": "11-3", "question": "Willensermittlung sollte:", "options": ["Dokumentiert und nachvollziehbar sein", "Nur mündlich ohne Notiz bleiben", "Nur einmal im Leben erfolgen", "Nur per E-Mail an das Gericht ohne Gespräch"], "correct": 0, "explain": "Qualität und Nachweisbarkeit der Orientierung am Willen."}, {"id": "11-4", "question": "Bei riskanten Wünschen gilt oft:", "options": ["Gespräch, Aufklärung, Abwägung – nicht sofortiger Zwang", "Sofortige Unterbringung ohne Prüfung", "Ignorieren aller Risiken", "Nur Polizei ohne Betreuungsrecht"], "correct": 0, "explain": "Selbstbestimmung und Schutz sorgfältig ausbalancieren."}, {"id": "11-5", "question": "Präferenzen der betreuten Person erkennt man u. a. durch:", "options": ["Gespräche, Biografie, wiederkehrende Aussagen, Bezugspersonen", "Nur Kontoauszüge", "Nur Google-Suche zum Namen", "Nur Diagnoseschlüssel"], "correct": 0, "explain": "Mehrquellenansatz für mutmaßlichen Willen."}]}]};
+      state.fullModules = data.modules;
+      state.meta = data.meta;
+      state.modules = listSummary();
+      state.loading = false;
+      render();
+    } catch (err) {
+      state.loading = false;
+      state.error = err.message;
+      render();
+    }
+  }
+
+  function setRoute(route) {
+    state.route = route;
+    state.error = null;
+    if (route !== "quiz" && route !== "result") {
+      state.quiz = null;
+      state.review = null;
+      state.selections = {};
+      state.quizIndex = 0;
+    }
+    render();
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }
+
+  function updateTabs() {
+    const active =
+      state.route === "home"
+        ? "home"
+        : state.route === "progress"
+          ? "progress"
+          : "modules";
+    tabbar.querySelectorAll(".tab").forEach((btn) => {
+      btn.classList.toggle("is-active", btn.dataset.route === active);
+    });
+  }
+
+  function escapeHtml(str) {
+    return String(str)
+      .replaceAll("&", "&amp;")
+      .replaceAll("<", "&lt;")
+      .replaceAll(">", "&gt;")
+      .replaceAll('"', "&quot;");
+  }
+
+  function renderHome() {
+    const prog = overallProgress();
+    const nextId = continueModuleId();
+    return `
+      <section class="screen">
+        <div class="hero">
+          <h1 class="brand">GBB Lernen</h1>
+          <p class="hero-line">Sachkunde für gesetzliche Berufsbetreuung</p>
+          <p class="hero-sub">Elf Module nach BtRegV – Lernkarten und Quiz für unterwegs.</p>
+          <div class="cta-row">
+            <button class="btn btn-primary" data-action="open-module" data-id="${nextId}">Weiterlernen</button>
+            <button class="btn btn-ghost" data-action="go" data-route="modules">Alle Module</button>
+          </div>
+        </div>
+        <div class="panel after-hero">
+          <div class="stat-line">
+            <div class="stat"><strong>${prog.percent}%</strong><span>Module bestanden</span></div>
+            <div class="stat"><strong>${state.meta?.total_hours || 270}</strong><span>Zeitstunden (Lehrgang)</span></div>
+            <div class="stat"><strong>${state.meta?.total_questions || 0}</strong><span>Quizfragen</span></div>
+          </div>
+          <p class="disclaimer">${escapeHtml(state.meta?.disclaimer || "")}</p>
+        </div>
+      </section>
+    `;
+  }
+
+  function renderModules() {
+    const rows = state.modules
+      .map((m) => {
+        const p = moduleProgress(m.id);
+        const badge = p.passed
+          ? `<span class="badge">Bestanden ${p.bestPercent}%</span>`
+          : p.bestPercent
+            ? `<span class="badge warn">Bestwert ${p.bestPercent}%</span>`
+            : "";
+        return `
+          <button class="module-row" data-action="open-module" data-id="${m.id}">
+            <div class="mod-num">${m.id}</div>
+            <div class="mod-body">
+              <h3>${escapeHtml(m.title)}</h3>
+              <p>${escapeHtml(m.area)} · ${m.quiz_count} Fragen</p>
+              ${badge}
+            </div>
+            <div class="mod-meta">${m.hours} Std.</div>
+          </button>
+        `;
+      })
+      .join("");
+
+    return `
+      <section class="screen panel">
+        <h2 class="section-title">Module</h2>
+        <p class="lede">Inhaltliche Anforderungen an die Sachkunde – Anlage zu § 3 Abs. 4 BtRegV.</p>
+        <div class="module-list">${rows}</div>
+      </section>
+    `;
+  }
+
+  function renderProgress() {
+    const prog = overallProgress();
+    const rows = state.modules
+      .map((m) => {
+        const p = moduleProgress(m.id);
+        return `
+          <div class="learn-card">
+            <strong>Modul ${m.id}: ${escapeHtml(m.title)}</strong>
+            <div class="progress-bar"><span style="width:${p.bestPercent}%"></span></div>
+            <p>${p.passed ? "Bestanden" : "Offen"} · ${p.attempts} Versuch${p.attempts === 1 ? "" : "e"} · Bestwert ${p.bestPercent}%</p>
+          </div>
+        `;
+      })
+      .join("");
+
+    return `
+      <section class="screen panel">
+        <h2 class="section-title">Fortschritt</h2>
+        <p class="lede">${prog.done} von ${prog.total} Modulen mit mindestens 60 % bestanden.</p>
+        <div class="progress-bar" style="height:14px;margin-bottom:18px"><span style="width:${prog.percent}%"></span></div>
+        <div class="card-stack">${rows}</div>
+        <button class="btn btn-soft" data-action="reset-progress" style="width:100%;margin-top:8px">Fortschritt zurücksetzen</button>
+      </section>
+    `;
+  }
+
+  function renderModuleDetail() {
+    const m = state.module;
+    if (!m) {
+      return `
+        <section class="screen">
+          <div class="topbar">
+            <button class="back" data-action="go" data-route="modules" aria-label="Zurück">←</button>
+            <h2>Modul</h2>
+          </div>
+          <div class="panel"><p class="lede">Modul wird geladen…</p></div>
+        </section>`;
+    }
+    const p = moduleProgress(m.id);
+    const topics = m.topics.map((t) => `<div class="topic">${escapeHtml(t)}</div>`).join("");
+    const cards = m.cards
+      .map(
+        (c) => `
+        <article class="learn-card">
+          <strong>${escapeHtml(c.q)}</strong>
+          <p>${escapeHtml(c.a)}</p>
+        </article>`
+      )
+      .join("");
+
+    return `
+      <section class="screen">
+        <div class="topbar">
+          <button class="back" data-action="go" data-route="modules" aria-label="Zurück">←</button>
+          <h2>Modul ${m.id}</h2>
+        </div>
+        <div class="panel">
+          <h2 class="section-title">${escapeHtml(m.title)}</h2>
+          <p class="lede">${escapeHtml(m.summary)} · ${m.hours} Zeitstunden</p>
+          ${p.passed ? `<span class="badge">Quiz bestanden (${p.bestPercent}%)</span>` : ""}
+          <h3 class="section-title" style="font-size:1.15rem;margin-top:20px">Themen</h3>
+          <div class="topic-list">${topics}</div>
+          <h3 class="section-title" style="font-size:1.15rem">Lernkarten</h3>
+          <div class="card-stack">${cards}</div>
+          <div class="cta-row" style="margin-top:8px">
+            <button class="btn btn-ink" data-action="start-quiz" data-id="${m.id}">Quiz starten</button>
+          </div>
+        </div>
+      </section>
+    `;
+  }
+
+  function renderQuiz() {
+    const q = state.quiz.questions[state.quizIndex];
+    const total = state.quiz.questions.length;
+    const pct = Math.round((state.quizIndex / total) * 100);
+    const selected = state.selections[q.id];
+    const options = q.options
+      .map(
+        (opt, idx) => `
+        <button class="option ${selected === idx ? "is-selected" : ""}" data-action="select-option" data-idx="${idx}">
+          ${escapeHtml(opt)}
+        </button>`
+      )
+      .join("");
+
+    return `
+      <section class="screen">
+        <div class="topbar">
+          <button class="back" data-action="open-module" data-id="${state.quiz.module_id}" aria-label="Zurück">←</button>
+          <h2>Quiz · ${state.quizIndex + 1}/${total}</h2>
+        </div>
+        <div class="panel">
+          <div class="quiz-progress"><i style="width:${pct}%"></i></div>
+          <p class="q-text">${escapeHtml(q.question)}</p>
+          <div class="options">${options}</div>
+          <div class="cta-row" style="margin-top:18px">
+            <button class="btn btn-ink" data-action="next-question" ${selected == null ? "disabled" : ""}>
+              ${state.quizIndex + 1 === total ? "Auswerten" : "Weiter"}
+            </button>
+          </div>
+        </div>
+      </section>
+    `;
+  }
+
+  function renderResult() {
+    const r = state.review;
+    const cls = r.passed ? "pass" : "fail";
+    const details = r.results
+      .map((item, i) => {
+        const q = state.quiz.questions.find((x) => x.id === item.question_id);
+        return `
+          <article class="learn-card">
+            <strong>${i + 1}. ${escapeHtml(q?.question || "")}</strong>
+            <p>${item.is_correct ? "Richtig" : "Falsch"} · ${escapeHtml(item.explain)}</p>
+          </article>`;
+      })
+      .join("");
+
+    return `
+      <section class="screen">
+        <div class="result-hero">
+          <p>Modul ${r.module_id}</p>
+          <div class="score ${cls}">${r.percent}%</div>
+          <p class="${cls}">${r.correct} von ${r.total} richtig · ${r.passed ? "Bestanden" : "Noch nicht bestanden (60 % nötig)"}</p>
+        </div>
+        <div class="panel">
+          <div class="card-stack">${details}</div>
+          <div class="cta-row" style="margin-top:12px;display:grid">
+            <button class="btn btn-ink" data-action="start-quiz" data-id="${r.module_id}">Nochmal üben</button>
+            <button class="btn btn-soft" data-action="go" data-route="modules">Zur Modulübersicht</button>
+          </div>
+        </div>
+      </section>
+    `;
+  }
+
+  function render() {
+    updateTabs();
+    if (state.loading) {
+      app.innerHTML = `<section class="screen panel"><p>Laden…</p></section>`;
+      return;
+    }
+    if (state.error) {
+      app.innerHTML = `<section class="screen panel"><p>${escapeHtml(state.error)}</p></section>`;
+      return;
+    }
+
+    let html = "";
+    switch (state.route) {
+      case "home":
+        html = renderHome();
+        break;
+      case "modules":
+        html = renderModules();
+        break;
+      case "progress":
+        html = renderProgress();
+        break;
+      case "module":
+        html = renderModuleDetail();
+        break;
+      case "quiz":
+        html = renderQuiz();
+        break;
+      case "result":
+        html = renderResult();
+        break;
+      default:
+        html = renderHome();
+    }
+    app.innerHTML = html;
+  }
+
+  function openModule(id) {
+    state.route = "module";
+    state.module = getFullModule(id);
+    markCardsDone(id);
+    render();
+  }
+
+  function startQuiz(id) {
+    const module = getFullModule(id);
+    if (!module) return;
+    state.quiz = {
+      module_id: id,
+      title: module.title,
+      questions: module.quiz.map((q) => ({
+        id: q.id,
+        question: q.question,
+        options: q.options,
+        correct: q.correct,
+        explain: q.explain,
+      })),
+    };
+    state.quizIndex = 0;
+    state.selections = {};
+    state.review = null;
+    state.route = "quiz";
+    render();
+  }
+
+  function submitQuiz() {
+    const questions = state.quiz.questions;
+    let correctCount = 0;
+    const results = questions.map((q) => {
+      const selected = state.selections[q.id];
+      const isCorrect = selected === q.correct;
+      if (isCorrect) correctCount += 1;
+      return {
+        question_id: q.id,
+        selected,
+        correct_index: q.correct,
+        is_correct: isCorrect,
+        explain: q.explain,
+      };
+    });
+    const total = questions.length;
+    const percent = total ? Math.round((correctCount / total) * 100) : 0;
+    const passed = percent >= 60;
+    markQuizResult(state.quiz.module_id, percent, passed);
+    state.review = {
+      module_id: state.quiz.module_id,
+      correct: correctCount,
+      total,
+      percent,
+      passed,
+      results,
+    };
+    state.route = "result";
+    render();
+  }
+
+  function showApp() {
+    gate.classList.add("hidden");
+    appShell.classList.remove("hidden");
+    boot();
+  }
+
+  loginForm.addEventListener("submit", (e) => {
+    e.preventDefault();
+    const user = document.getElementById("user").value.trim();
+    const pass = document.getElementById("pass").value;
+    if (user === EXPECTED_USER && pass === EXPECTED_PASS) {
+      setAuthed();
+      gateError.textContent = "";
+      showApp();
+    } else {
+      gateError.textContent = "Benutzer oder Passwort falsch.";
+    }
+  });
+
+  tabbar.addEventListener("click", (e) => {
+    const btn = e.target.closest("[data-route]");
+    if (!btn) return;
+    setRoute(btn.dataset.route);
+  });
+
+  app.addEventListener("click", (e) => {
+    const el = e.target.closest("[data-action]");
+    if (!el) return;
+    const action = el.dataset.action;
+
+    if (action === "go") setRoute(el.dataset.route);
+    if (action === "open-module") openModule(Number(el.dataset.id));
+    if (action === "start-quiz") startQuiz(Number(el.dataset.id));
+    if (action === "select-option") {
+      const q = state.quiz.questions[state.quizIndex];
+      state.selections[q.id] = Number(el.dataset.idx);
+      render();
+    }
+    if (action === "next-question") {
+      const q = state.quiz.questions[state.quizIndex];
+      if (state.selections[q.id] == null) return;
+      if (state.quizIndex + 1 >= state.quiz.questions.length) {
+        submitQuiz();
+      } else {
+        state.quizIndex += 1;
+        render();
+      }
+    }
+    if (action === "reset-progress") {
+      if (confirm("Gesamten Lernfortschritt wirklich löschen?")) {
+        localStorage.removeItem(STORAGE_KEY);
+        render();
+      }
+    }
+  });
+
+  if (isAuthed()) showApp();
+})();
+
+</script>
+</body>
+</html>
