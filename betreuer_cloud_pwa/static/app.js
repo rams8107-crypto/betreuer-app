@@ -139,7 +139,7 @@
         <div class="hero">
           <h1 class="brand">GBB Lernen</h1>
           <p class="hero-line">Sachkunde für gesetzliche Berufsbetreuung</p>
-          <p class="hero-sub">Elf Module nach BtRegV – Lernkarten und Quiz für unterwegs.</p>
+          <p class="hero-sub">Alle Unterrichtsinhalte der BtRegV-Anlage – Originalpunkte mit Lerntext und Quiz.</p>
           <div class="cta-row">
             <button class="btn btn-primary" data-action="open-module" data-id="${nextId}">Weiterlernen</button>
             <button class="btn btn-ghost" data-action="go" data-route="modules">Alle Module</button>
@@ -149,9 +149,11 @@
           <div class="stat-line">
             <div class="stat"><strong>${prog.percent}%</strong><span>Module bestanden</span></div>
             <div class="stat"><strong>${state.meta?.total_hours || 270}</strong><span>Zeitstunden (Lehrgang)</span></div>
+            <div class="stat"><strong>${state.meta?.total_official_topics || state.meta?.total_questions || 0}</strong><span>Original-Inhalte</span></div>
             <div class="stat"><strong>${state.meta?.total_questions || 0}</strong><span>Quizfragen</span></div>
           </div>
           <p class="disclaimer">${escapeHtml(state.meta?.disclaimer || "")}</p>
+          ${state.meta?.source ? `<p class="disclaimer"><a href="${state.meta.source.pdf_url}" target="_blank" rel="noopener">Original-PDF BtRegV (gesetze-im-internet.de)</a> · ${escapeHtml(state.meta.source.citation || "")}</p>` : ""}
         </div>
       </section>
     `;
@@ -215,7 +217,7 @@
     `;
   }
 
-  function renderModuleDetail() {
+function renderModuleDetail() {
     const m = state.module;
     if (!m) {
       return `
@@ -228,13 +230,12 @@
         </section>`;
     }
     const p = moduleProgress(m.id);
-    const topics = m.topics.map((t) => `<div class="topic">${escapeHtml(t)}</div>`).join("");
-    const cards = m.cards
+    const lessons = (m.lessons || (m.topics || []).map((t) => ({ title: t, body: "" })))
       .map(
-        (c) => `
+        (lesson, idx) => `
         <article class="learn-card">
-          <strong>${escapeHtml(c.q)}</strong>
-          <p>${escapeHtml(c.a)}</p>
+          <strong>${idx + 1}. ${escapeHtml(lesson.title || lesson)}</strong>
+          ${lesson.body ? `<p>${escapeHtml(lesson.body)}</p>` : ""}
         </article>`
       )
       .join("");
@@ -247,14 +248,13 @@
         </div>
         <div class="panel">
           <h2 class="section-title">${escapeHtml(m.title)}</h2>
-          <p class="lede">${escapeHtml(m.summary)} · ${m.hours} Zeitstunden</p>
+          <p class="lede">${escapeHtml(m.summary)} · ${m.hours} Zeitstunden${m.legal_ref ? ` · ${escapeHtml(m.legal_ref)}` : ""}</p>
           ${p.passed ? `<span class="badge">Quiz bestanden (${p.bestPercent}%)</span>` : ""}
-          <h3 class="section-title" style="font-size:1.15rem;margin-top:20px">Themen</h3>
-          <div class="topic-list">${topics}</div>
-          <h3 class="section-title" style="font-size:1.15rem">Lernkarten</h3>
-          <div class="card-stack">${cards}</div>
+          <h3 class="section-title" style="font-size:1.15rem;margin-top:20px">Unterrichtsinhalte (BtRegV-Anlage, Original)</h3>
+          <p class="lede">Alle Punkte aus der amtlichen Anlage – mit Lerntext zur Wiederholung.</p>
+          <div class="card-stack">${lessons}</div>
           <div class="cta-row" style="margin-top:8px">
-            <button class="btn btn-ink" data-action="start-quiz" data-id="${m.id}">Quiz starten</button>
+            <button class="btn btn-ink" data-action="start-quiz" data-id="${m.id}">Quiz starten (${(m.quiz || []).length || m.quiz_count || 0} Fragen)</button>
           </div>
         </div>
       </section>

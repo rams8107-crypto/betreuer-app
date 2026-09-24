@@ -76,8 +76,10 @@ def list_modules(_: str = Depends(require_login)):
             "area": m["area"],
             "summary": m["summary"],
             "topic_count": len(m["topics"]),
+            "lesson_count": len(m.get("lessons", [])),
             "card_count": len(m["cards"]),
             "quiz_count": len(m["quiz"]),
+            "legal_ref": m.get("legal_ref", ""),
         }
         for m in MODULES
     ]
