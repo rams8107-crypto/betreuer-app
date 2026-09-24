@@ -1,22 +1,10 @@
-# GBB Lernen
+# GBB Lernen (App-Ordner)
 
-Mobile Lern-App zur Vorbereitung auf den **Sachkundenachweis** für gesetzliche Berufsbetreuerinnen und Berufsbetreuer (Module nach Anlage zu § 3 Abs. 4 BtRegV).
+Siehe [README im Repo-Root](../README.md) für Render-Deploy und Handy-Nutzung.
 
-## Funktionen
-
-- 11 Module mit Themenübersicht und Lernkarten
-- Quiz pro Modul (Auswertung serverseitig, Bestehensgrenze 60 %)
-- Fortschritt lokal im Browser (localStorage)
-- PWA-tauglich (Manifest, Homescreen)
-
-**Hinweis:** Dies ist eine Lernhilfe, kein anerkannter Sachkundelehrgang nach BtRegV § 6.
-
-## Start
+## Lokal
 
 ```bash
-cd betreuer_cloud_pwa
 pip install -r requirements.txt
-uvicorn main:app --host 0.0.0.0 --port 8000
+python3 -m uvicorn main:app --host 0.0.0.0 --port 8000
 ```
-
-Öffnen: http://localhost:8000
