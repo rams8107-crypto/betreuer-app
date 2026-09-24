@@ -1,10 +1,12 @@
 # GBB Lernen
 
-Dauerhafte private Lern-App (Passwortschutz) für iPhone und Android.
+Dauerhafte private Lern-App (Passwort) für iPhone und Android.
 
 ## Sofort öffnen (dauerhaft)
 
-**https://cdn.jsdelivr.net/gh/rams8107-crypto/betreuer-app@gbb-lernen/docs/index.html**
+Kopieren und im Handy-Browser öffnen:
+
+**https://htmlpreview.github.io/?https://raw.githubusercontent.com/rams8107-crypto/betreuer-app/gbb-lernen/docs/gbb.html**
 
 Login:
 
