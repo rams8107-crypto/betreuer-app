@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>GBB Lernen</title>
+  <meta name="theme-color" content="#0B1F1A" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-title" content="GBB Lernen" />
+  <link rel="manifest" href="static/manifest.webmanifest" />
+  <link rel="apple-touch-icon" href="static/icon.svg" />
+  <link rel="icon" href="static/icon.svg" type="image/svg+xml" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,700;1,9..40,400&family=Fraunces:opsz,wght@9..144,500;9..144,700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="static/styles.css" />
+  <style>
+    .gate {
+      min-height: 100dvh;
+      display: grid;
+      place-items: center;
+      padding: 24px;
+    }
+    .gate-box {
+      width: min(100%, 360px);
+      background: rgba(255,255,255,0.72);
+      border: 1px solid rgba(11,31,26,0.12);
+      border-radius: 18px;
+      padding: 28px 22px;
+      backdrop-filter: blur(10px);
+    }
+    .gate-box h1 {
+      font-family: "Fraunces", Georgia, serif;
+      font-size: 2rem;
+      margin: 0 0 8px;
+    }
+    .gate-box p {
+      color: #5c7268;
+      margin: 0 0 18px;
+      font-size: 0.95rem;
+      line-height: 1.4;
+    }
+    .gate-box label {
+      display: block;
+      font-size: 0.8rem;
+      font-weight: 700;
+      margin: 0 0 6px;
+    }
+    .gate-box input {
+      width: 100%;
+      border: 1px solid rgba(11,31,26,0.16);
+      border-radius: 12px;
+      padding: 12px 14px;
+      font: 500 1rem/1.2 "DM Sans", sans-serif;
+      margin-bottom: 12px;
+      background: #fff;
+    }
+    .gate-error {
+      color: #a33b32;
+      font-size: 0.85rem;
+      min-height: 1.2em;
+      margin: 0 0 8px;
+    }
+  </style>
+</head>
+<body>
+  <div class="atmosphere" aria-hidden="true"></div>
+  <div id="gate" class="gate">
+    <form class="gate-box" id="loginForm">
+      <h1>GBB Lernen</h1>
+      <p>Privater Zugang – bitte anmelden.</p>
+      <label for="user">Benutzer</label>
+      <input id="user" name="user" autocomplete="username" required />
+      <label for="pass">Passwort</label>
+      <input id="pass" name="pass" type="password" autocomplete="current-password" required />
+      <p class="gate-error" id="gateError"></p>
+      <button class="btn btn-ink" type="submit">Öffnen</button>
+    </form>
+  </div>
+  <div id="appShell" class="hidden">
+    <div id="app"></div>
+    <nav class="tabbar" id="tabbar" aria-label="Hauptnavigation">
+      <button type="button" data-route="home" class="tab is-active">
+        <span class="tab-ico" aria-hidden="true">⌂</span>
+        <span>Start</span>
+      </button>
+      <button type="button" data-route="modules" class="tab">
+        <span class="tab-ico" aria-hidden="true">☰</span>
+        <span>Module</span>
+      </button>
+      <button type="button" data-route="progress" class="tab">
+        <span class="tab-ico" aria-hidden="true">◎</span>
+        <span>Fortschritt</span>
+      </button>
+    </nav>
+  </div>
+  <script src="static/app.js" defer></script>
+</body>
+</html>
